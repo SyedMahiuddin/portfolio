@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "603308289777",
+    "project_id": "jadurhotel",
+    "storage_bucket": "jadurhotel.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603308289777:android:cfe18e358721297ffac350",
+        "android_client_info": {
+          "package_name": "com.example.hoteljadu"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_zB0pBYXw_GYd6G3gWyzwL07TQ0t5B5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603308289777:android:472a3801100da0b9fac350",
+        "android_client_info": {
+          "package_name": "com.example.portfolio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_zB0pBYXw_GYd6G3gWyzwL07TQ0t5B5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603308289777:android:e6cb185ccb2394befac350",
+        "android_client_info": {
+          "package_name": "com.example.relaks_media"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_zB0pBYXw_GYd6G3gWyzwL07TQ0t5B5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603308289777:android:bdd98df1d8380431fac350",
+        "android_client_info": {
+          "package_name": "com.example.toktik"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_zB0pBYXw_GYd6G3gWyzwL07TQ0t5B5o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

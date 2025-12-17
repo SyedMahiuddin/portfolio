@@ -1,0 +1,49 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "jadurhotel",
+          "appId": "1:603308289777:android:472a3801100da0b9fac350",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "jadurhotel",
+          "appId": "1:603308289777:ios:7438b36c5ae3a55ffac350",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "jadurhotel",
+          "appId": "1:603308289777:ios:7438b36c5ae3a55ffac350",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "jadurhotel",
+          "configurations": {
+            "android": "1:603308289777:android:472a3801100da0b9fac350",
+            "ios": "1:603308289777:ios:7438b36c5ae3a55ffac350",
+            "macos": "1:603308289777:ios:7438b36c5ae3a55ffac350",
+            "web": "1:603308289777:web:ab858d69f621b210fac350",
+            "windows": "1:603308289777:web:61990df7075ee421fac350"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
