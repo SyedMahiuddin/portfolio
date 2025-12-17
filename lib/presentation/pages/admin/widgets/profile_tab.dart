@@ -137,6 +137,14 @@ class ProfileTab extends GetView<AdminController> {
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide(color: AppColors.glassBorder),
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.glassBorder),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: BorderSide(color: AppColors.purple, width: 2),
+                  ),
                 ),
               ),
             ),
@@ -147,6 +155,9 @@ class ProfileTab extends GetView<AdminController> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.purple,
                 minimumSize: Size(120, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
             ),
           ],
@@ -185,7 +196,10 @@ class ProfileTab extends GetView<AdminController> {
                     children: [
                       Expanded(
                         child: TextField(
-                          controller: controller.skillItemController,
+                          key: ValueKey(entry.key),
+                          onChanged: (value) {
+                            controller.skillItemController.text = value;
+                          },
                           style: TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Add skill',
@@ -194,17 +208,34 @@ class ProfileTab extends GetView<AdminController> {
                             fillColor: AppColors.glassBackground,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: AppColors.glassBorder),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: AppColors.glassBorder),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: AppColors.cyan, width: 2),
                             ),
                           ),
+                          onSubmitted: (value) {
+                            if (value.isNotEmpty) {
+                              controller.addSkillToCategory(entry.key);
+                            }
+                          },
                         ),
                       ),
                       SizedBox(width: 8),
                       ElevatedButton(
-                        onPressed: () => controller.addSkillToCategory(),
+                        onPressed: () => controller.addSkillToCategory(entry.key),
                         child: Text('Add'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.cyan,
                           minimumSize: Size(60, 48),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                       ),
                     ],

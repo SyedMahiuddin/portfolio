@@ -14,6 +14,17 @@ dependencies:
   firebase_core: ^4.3.0
   firebase_auth: ^6.1.3
   url_launcher: ^6.2.2
+  flutter_launcher_icons: ^0.14.4
+
+
+flutter_launcher_icons:
+  image_path: "assets/sm_logo.png"
+  web:
+    generate: true
+    image_path: "assets/sm_logo.png"
+    background_color: "#ffffff"
+    theme_color: "#000000"
+
 
 dev_dependencies:
   flutter_test:

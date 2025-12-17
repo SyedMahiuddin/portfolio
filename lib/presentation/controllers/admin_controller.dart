@@ -157,12 +157,12 @@ class AdminController extends GetxController {
     }
   }
 
-  void addSkillToCategory() {
-    if (selectedSkillCategory.value.isNotEmpty && skillItemController.text.isNotEmpty) {
-      if (technicalSkills.containsKey(selectedSkillCategory.value)) {
-        technicalSkills[selectedSkillCategory.value]!.add(skillItemController.text);
-        skillItemController.clear();
+  void addSkillToCategory(String category) {
+    if (skillItemController.text.isNotEmpty) {
+      if (technicalSkills.containsKey(category)) {
+        technicalSkills[category]!.add(skillItemController.text);
         technicalSkills.refresh();
+        skillItemController.clear();
       }
     }
   }
@@ -492,10 +492,8 @@ class AdminController extends GetxController {
     linkedinController.dispose();
     githubController.dispose();
     phoneController.dispose();
-
     skillCategoryController.dispose();
     skillItemController.dispose();
-
     projectTitleController.dispose();
     projectDescController.dispose();
     projectDetailsController.dispose();
@@ -507,13 +505,11 @@ class AdminController extends GetxController {
     projectImageUrlController.dispose();
     techInputController.dispose();
     featureInputController.dispose();
-
     expCompanyController.dispose();
     expPositionController.dispose();
     expDescController.dispose();
     expStartDateController.dispose();
     expEndDateController.dispose();
-
     super.onClose();
   }
 }

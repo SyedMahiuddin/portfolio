@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -83,16 +85,14 @@ class HeroSection extends GetView<HomeController> {
   }
 
   Widget _buildMobileLayout(profile) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(height: 100),
-          _buildImageSection(profile, size: Get.width * 0.7),
-          SizedBox(height: 40),
-          _buildTextContent(profile),
-          SizedBox(height: 40),
-        ],
-      ),
+    return Column(
+      children: [
+        SizedBox(height: 30),
+        _buildImageSection(profile, size: Get.width * 0.7),
+        SizedBox(height: 20),
+        _buildTextContent(profile),
+        SizedBox(height: 20),
+      ],
     );
   }
 
@@ -116,15 +116,6 @@ class HeroSection extends GetView<HomeController> {
           text: profile.role,
           style: AppTextStyles.headline2,
           gradient: AppColors.gradientColors,
-        ),
-        SizedBox(height: 24),
-        ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: 600),
-          child: Text(
-            profile.bio,
-            style: AppTextStyles.body1,
-            textAlign: Get.width > 1024 ? TextAlign.left : TextAlign.center,
-          ),
         ),
         SizedBox(height: 40),
         Wrap(
@@ -178,27 +169,13 @@ class HeroSection extends GetView<HomeController> {
               ),
             ),
           ),
-          if (Get.width > 600)
-            Positioned(
-              bottom: 20,
-              right: 20,
-              child: GlassCard(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${profile.yearsExperience}+',
-                      style: AppTextStyles.headline3.copyWith(fontSize: Get.width > 768 ? 24 : 18),
-                    ),
-                    Text(
-                      'Years Experience',
-                      style: AppTextStyles.body2.copyWith(fontSize: Get.width > 768 ? 14 : 10),
-                    ),
-                  ],
-                ),
-              ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: _ExperienceCard(
+              years: profile.yearsExperience,
             ),
+          ),
         ],
       ),
     );
@@ -223,5 +200,115 @@ class HeroSection extends GetView<HomeController> {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     }
+  }
+}
+
+class _ExperienceCard extends StatefulWidget {
+  final int years;
+
+  const _ExperienceCard({required this.years});
+
+  @override
+  State<_ExperienceCard> createState() => _ExperienceCardState();
+}
+
+class _ExperienceCardState extends State<_ExperienceCard>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _glowAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    _glowAnimation = Tween<double>(begin: 0.2, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        _controller.forward();
+      },
+      onExit: (_) {
+        setState(() => _isHovered = false);
+        _controller.reverse();
+      },
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+              decoration: BoxDecoration(
+                color: AppColors.glassBackground,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: AppColors.glassBorder.withOpacity(_glowAnimation.value),
+                  width: 1,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppColors.purple.withOpacity(0.2 * _glowAnimation.value),
+                    blurRadius: 20 * _glowAnimation.value,
+                    spreadRadius: 2 * _glowAnimation.value,
+                  ),
+                  BoxShadow(
+                    color: AppColors.cyan.withOpacity(0.2 * _glowAnimation.value),
+                    blurRadius: 15 * _glowAnimation.value,
+                    spreadRadius: 1 * _glowAnimation.value,
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '${widget.years}+',
+                        style: AppTextStyles.headline3.copyWith(
+                          color: _isHovered ? AppColors.cyan : Colors.white,
+                        ),
+                      ),
+                      Text(
+                        'Years Experience',
+                        style: AppTextStyles.body2.copyWith(
+                          fontSize: 12,
+                          color: _isHovered ? AppColors.cyan : Colors.white70,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 }

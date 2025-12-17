@@ -94,7 +94,7 @@ class HomePage extends GetView<HomeController> {
       ),
       child: Center(
         child: Text(
-          '© 2024 Syed Mahiuddin. All rights reserved',
+          '© 2025 Syed Mahiuddin. All rights reserved',
           style: TextStyle(color: Colors.white60, fontSize: 14),
         ),
       ),

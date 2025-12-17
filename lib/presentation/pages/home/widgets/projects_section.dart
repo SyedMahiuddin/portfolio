@@ -18,36 +18,27 @@ class ProjectsSection extends GetView<HomeController> {
       ),
       child: Column(
         children: [
-          Text(
-            'Featured Projects',
-            style: AppTextStyles.headline2,
-            textAlign: TextAlign.center,
-          ),
+          _buildSectionHeader(),
           SizedBox(height: Get.width > 768 ? 60 : 40),
           Obx(() {
             if (controller.projects.isEmpty) {
-              return Center(
-                child: Text(
-                  'No projects available',
-                  style: AppTextStyles.body1,
-                ),
-              );
+              return _buildEmptyState();
             }
 
             return LayoutBuilder(
               builder: (context, constraints) {
                 int crossAxisCount = 3;
-                double childAspectRatio = 0.75;
+                double childAspectRatio = 0.85;
 
                 if (Get.width < 600) {
                   crossAxisCount = 1;
-                  childAspectRatio = 0.95;
+                  childAspectRatio = 1.0;
                 } else if (Get.width < 900) {
                   crossAxisCount = 2;
-                  childAspectRatio = 0.8;
+                  childAspectRatio = 0.9;
                 } else if (Get.width < 1200) {
                   crossAxisCount = 2;
-                  childAspectRatio = 0.85;
+                  childAspectRatio = 0.95;
                 }
 
                 return GridView.builder(
@@ -62,7 +53,10 @@ class ProjectsSection extends GetView<HomeController> {
                   itemCount: controller.projects.length,
                   itemBuilder: (context, index) {
                     final project = controller.projects[index];
-                    return _ProjectCard(project: project);
+                    return _ProjectCard(
+                      project: project,
+                      index: index,
+                    );
                   },
                 );
               },
@@ -72,420 +66,922 @@ class ProjectsSection extends GetView<HomeController> {
       ),
     );
   }
+
+  Widget _buildSectionHeader() {
+    return Column(
+      children: [
+        // Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        //   decoration: BoxDecoration(
+        //     color: AppColors.purple.withOpacity(0.2),
+        //     borderRadius: BorderRadius.circular(20),
+        //     border: Border.all(color: AppColors.purple.withOpacity(0.5)),
+        //   ),
+        //   child: Text(
+        //     'PORTFOLIO',
+        //     style: TextStyle(
+        //       fontSize: 12,
+        //       fontWeight: FontWeight.bold,
+        //       color: AppColors.purple,
+        //       letterSpacing: 2,
+        //     ),
+        //   ),
+        // ),
+       // SizedBox(height: 16),
+        Text(
+          'Featured Projects',
+          style: AppTextStyles.headline2,
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 12),
+        Text(
+          'Showcasing my best work in mobile and web development',
+          style: AppTextStyles.body1.copyWith(color: Colors.white60),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Container(
+      padding: EdgeInsets.all(60),
+      decoration: BoxDecoration(
+        color: AppColors.glassBackground,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.glassBorder),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.work_outline, size: 80, color: Colors.white30),
+          SizedBox(height: 20),
+          Text(
+            'No Projects Yet',
+            style: AppTextStyles.headline3,
+          ),
+          SizedBox(height: 12),
+          Text(
+            'Projects will appear here once added',
+            style: AppTextStyles.body1.copyWith(color: Colors.white60),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-class _ProjectCard extends StatelessWidget {
+class _ProjectCard extends StatefulWidget {
   final project;
+  final int index;
 
-  const _ProjectCard({required this.project});
+  const _ProjectCard({
+    required this.project,
+    required this.index,
+  });
+
+  @override
+  State<_ProjectCard> createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<_ProjectCard>
+    with SingleTickerProviderStateMixin {
+  bool _isHovered = false;
+  late AnimationController _controller;
+  late Animation<double> _scaleAnimation;
+  late Animation<double> _elevationAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.03).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+
+    _elevationAnimation = Tween<double>(begin: 0.0, end: 20.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Color _getProjectColor() {
+    final colors = [
+      AppColors.purple,
+      AppColors.cyan,
+      AppColors.pink,
+      Color(0xFF10b981),
+      Color(0xFFf59e0b),
+      Color(0xFF8b5cf6),
+    ];
+    return colors[widget.index % colors.length];
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => _showProjectDetails(),
-      child: GlassCard(
-        padding: EdgeInsets.zero,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            NetworkImageWithFallback(
-              imageUrl: project.images.isNotEmpty ? _convertDriveUrl(project.images.first) : null,
-              height: Get.width > 768 ? 180 : 150,
-              width: double.infinity,
-              fallbackIcon: Icons.image,
-              fallbackIconSize: 60,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.all(Get.width > 768 ? 16 : 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      project.title,
-                      style: AppTextStyles.headline3.copyWith(
-                        fontSize: Get.width > 768 ? 20 : 16,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+    final projectColor = _getProjectColor();
+    final isMobile = Get.width < 600;
+
+    return MouseRegion(
+      onEnter: (_) {
+        setState(() => _isHovered = true);
+        _controller.forward();
+      },
+      onExit: (_) {
+        setState(() => _isHovered = false);
+        _controller.reverse();
+      },
+      child: GestureDetector(
+        onTap: () => _showProjectDetails(),
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (context, child) {
+            return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: projectColor.withOpacity(_isHovered ? 0.3 : 0.1),
+                      blurRadius: _elevationAnimation.value,
+                      spreadRadius: _isHovered ? 2 : 0,
                     ),
-                    SizedBox(height: 8),
-                    Expanded(
-                      child: Text(
-                        project.description,
-                        style: AppTextStyles.body2.copyWith(
-                          fontSize: Get.width > 768 ? 14 : 12,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    SizedBox(height: 12),
-                    _buildProjectButtons(),
                   ],
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildProjectButtons() {
-    final buttons = <Widget>[];
-
-    if (project.projectType == 'web' && project.liveUrl != null && project.liveUrl!.isNotEmpty) {
-      buttons.add(_buildActionButton(
-        icon: Icons.web,
-        label: 'Web',
-        isActive: true,
-        onTap: () => _launchUrl(project.liveUrl!),
-      ));
-    }
-
-    if (project.projectType == 'mobile') {
-      buttons.add(_buildActionButton(
-        icon: Icons.shop,
-        label: 'Play Store',
-        isActive: project.playStoreUrl != null && project.playStoreUrl!.isNotEmpty,
-        onTap: () => _launchUrl(project.playStoreUrl ?? ''),
-      ));
-
-      buttons.add(_buildActionButton(
-        icon: Icons.apple,
-        label: 'App Store',
-        isActive: project.appStoreUrl != null && project.appStoreUrl!.isNotEmpty,
-        onTap: () => _launchUrl(project.appStoreUrl ?? ''),
-      ));
-
-      buttons.add(_buildActionButton(
-        icon: Icons.android,
-        label: 'APK',
-        isActive: project.apkUrl != null && project.apkUrl!.isNotEmpty,
-        onTap: () => _launchUrl(project.apkUrl ?? ''),
-      ));
-    }
-
-    if (buttons.isEmpty) {
-      return Text(
-        'No links available',
-        style: TextStyle(color: Colors.white38, fontSize: 12),
-      );
-    }
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: buttons,
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    required bool isActive,
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: isActive ? onTap : null,
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: Get.width > 768 ? 12 : 8,
-          vertical: Get.width > 768 ? 8 : 6,
-        ),
-        decoration: BoxDecoration(
-          color: isActive ? AppColors.purple.withOpacity(0.2) : Colors.white.withOpacity(0.05),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: isActive ? AppColors.purple : Colors.white24,
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              icon,
-              size: Get.width > 768 ? 16 : 14,
-              color: isActive ? AppColors.purple : Colors.white38,
-            ),
-            SizedBox(width: 6),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: Get.width > 768 ? 12 : 10,
-                color: isActive ? Colors.white : Colors.white38,
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showProjectDetails() {
-    Get.dialog(
-      Material(
-        color: Colors.black54,
-        child: Center(
-          child: Container(
-            width: Get.width > 1024 ? 1000 : Get.width * 0.95,
-            height: Get.height * 0.92,
-            margin: EdgeInsets.symmetric(vertical: 20, horizontal: Get.width > 768 ? 0 : 10),
-            decoration: BoxDecoration(
-              color: Color(0xFF0D1117),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: AppColors.glassBorder),
-            ),
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                  decoration: BoxDecoration(
-                    color: AppColors.glassBackground,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-                    border: Border(
-                      bottom: BorderSide(color: AppColors.glassBorder),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.glassBackground,
+                          projectColor.withOpacity(0.05),
+                        ],
+                      ),
+                      border: Border.all(
+                        color: _isHovered
+                            ? projectColor.withOpacity(0.6)
+                            : AppColors.glassBorder,
+                        width: _isHovered ? 2 : 1,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          project.title,
-                          style: AppTextStyles.headline3.copyWith(
-                            fontSize: Get.width > 768 ? 24 : 18,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => Get.back(),
-                        icon: Icon(Icons.close, color: Colors.white, size: 28),
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.all(Get.width > 768 ? 32 : 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (project.images.isNotEmpty) _buildImageGallery(),
-                        SizedBox(height: 32),
-                        _buildSection(
-                          'Project Type',
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: AppColors.purple.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: AppColors.purple),
+                        Stack(
+                          children: [
+                            NetworkImageWithFallback(
+                              imageUrl: widget.project.images.isNotEmpty
+                                  ? _convertDriveUrl(widget.project.images.first)
+                                  : null,
+                              height: Get.width > 768 ? 200 : 180,
+                              width: double.infinity,
+                              fallbackIcon: Icons.code,
+                              fallbackIconSize: 60,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
+                              ),
                             ),
-                            child: Text(
-                              project.projectType == 'web' ? 'Web Application' : 'Mobile Application',
-                              style: AppTextStyles.body1.copyWith(color: AppColors.purple),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 24),
-                        _buildSection('Description', Text(project.description, style: AppTextStyles.body1)),
-                        SizedBox(height: 24),
-                        if (project.details.isNotEmpty) ...[
-                          _buildSection('Project Details', Text(project.details, style: AppTextStyles.body1)),
-                          SizedBox(height: 24),
-                        ],
-                        if (project.features.isNotEmpty) ...[
-                          _buildSection(
-                            'Key Features',
-                            Column(
-                              children: project.features.map((feature) => Padding(
-                                padding: EdgeInsets.only(bottom: 12),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      margin: EdgeInsets.only(top: 4),
-                                      padding: EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: AppColors.cyan.withOpacity(0.2),
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Icon(Icons.check, color: AppColors.cyan, size: 16),
+                            Positioned(
+                              top: 12,
+                              right: 12,
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: projectColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: projectColor.withOpacity(0.5),
+                                      blurRadius: 8,
                                     ),
-                                    SizedBox(width: 12),
-                                    Expanded(
-                                      child: Text(
-                                        feature,
-                                        style: AppTextStyles.body1,
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      widget.project.projectType == 'web'
+                                          ? Icons.language
+                                          : Icons.smartphone,
+                                      size: 14,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(width: 4),
+                                    Text(
+                                      widget.project.projectType.toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                        letterSpacing: 1,
                                       ),
                                     ),
                                   ],
                                 ),
-                              )).toList(),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              left: 0,
+                              right: 0,
+                              child: Container(
+                                height: 60,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.7),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: EdgeInsets.all(isMobile ? 16 : 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget.project.title,
+                                  style: AppTextStyles.headline3.copyWith(
+                                    fontSize: isMobile ? 18 : 22,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(height: 12),
+                                Expanded(
+                                  child: Text(
+                                    widget.project.description,
+                                    style: AppTextStyles.body2.copyWith(
+                                      fontSize: isMobile ? 13 : 14,
+                                      height: 1.5,
+                                    ),
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                SizedBox(height: 16),
+                                _buildProjectActions(projectColor),
+                              ],
                             ),
                           ),
-                          SizedBox(height: 24),
-                        ],
-                        _buildSection(
-                          'Technologies Used',
-                          Wrap(
-                            spacing: 12,
-                            runSpacing: 12,
-                            children: project.technologies.map<Widget>((tech) => Container(
-                              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: AppColors.purple.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.purple.withOpacity(0.5)),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.code, size: 16, color: AppColors.purple),
-                                  SizedBox(width: 8),
-                                  Text(tech, style: AppTextStyles.body2),
-                                ],
-                              ),
-                            )).toList(),
-                          ),
                         ),
-                        SizedBox(height: 32),
-                        _buildProjectLinks(),
                       ],
                     ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildProjectActions(Color projectColor) {
+    final hasLinks = _hasAnyLinks();
+
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  projectColor.withOpacity(0.8),
+                  projectColor,
+                ],
+              ),
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: _isHovered
+                  ? [
+                BoxShadow(
+                  color: projectColor.withOpacity(0.4),
+                  blurRadius: 12,
+                ),
+              ]
+                  : [],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.visibility, size: 16, color: Colors.white),
+                SizedBox(width: 8),
+                Text(
+                  'View Details',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
                   ),
                 ),
               ],
             ),
           ),
         ),
-      ),
-      barrierDismissible: true,
-    );
-  }
-
-  Widget _buildImageGallery() {
-    if (project.images.length == 1) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: NetworkImageWithFallback(
-          imageUrl: _convertDriveUrl(project.images.first),
-          width: double.infinity,
-          height: Get.width > 768 ? 400 : 250,
-          borderRadius: BorderRadius.circular(16),
-        ),
-      );
-    }
-
-    return Container(
-      height: Get.width > 768 ? 400 : 250,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: project.images.length,
-        itemBuilder: (context, index) {
-          return Container(
-            width: Get.width > 768 ? 600 : Get.width * 0.85,
-            margin: EdgeInsets.only(right: 16),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: NetworkImageWithFallback(
-                imageUrl: _convertDriveUrl(project.images[index]),
-                width: double.infinity,
-                height: double.infinity,
-                borderRadius: BorderRadius.circular(16),
-              ),
+        if (hasLinks) ...[
+          SizedBox(width: 12),
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: projectColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: projectColor.withOpacity(0.5)),
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildSection(String title, Widget content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.headline3.copyWith(fontSize: Get.width > 768 ? 22 : 18),
-        ),
-        SizedBox(height: 12),
-        content,
+            child: Icon(
+              Icons.open_in_new,
+              size: 18,
+              color: projectColor,
+            ),
+          ),
+        ],
       ],
     );
   }
 
-  Widget _buildProjectLinks() {
+  bool _hasAnyLinks() {
+    if (widget.project.projectType == 'web') {
+      return widget.project.liveUrl != null &&
+          widget.project.liveUrl!.isNotEmpty;
+    } else {
+      return (widget.project.playStoreUrl != null &&
+          widget.project.playStoreUrl!.isNotEmpty) ||
+          (widget.project.appStoreUrl != null &&
+              widget.project.appStoreUrl!.isNotEmpty) ||
+          (widget.project.apkUrl != null && widget.project.apkUrl!.isNotEmpty);
+    }
+  }
+
+  void _showProjectDetails() {
+    final isMobile = Get.width < 768;
+    final projectColor = _getProjectColor();
+
+    Get.dialog(
+      Dialog(
+        backgroundColor: Colors.transparent,
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isMobile ? 16 : 40,
+          vertical: isMobile ? 20 : 40,
+        ),
+        child: Container(
+          width: Get.width > 1024 ? 1100 : double.infinity,
+          constraints: BoxConstraints(
+            maxHeight: Get.height * 0.9,
+          ),
+          decoration: BoxDecoration(
+            color: Color(0xFF0A0E27),
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: projectColor.withOpacity(0.3),
+              width: 2,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: projectColor.withOpacity(0.2),
+                blurRadius: 30,
+                spreadRadius: 5,
+              ),
+            ],
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDialogHeader(projectColor, isMobile),
+              Flexible(
+                child: SingleChildScrollView(
+                  padding: EdgeInsets.all(Get.width > 768 ? 40 : 24),
+                  child: _buildDialogContent(projectColor),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      barrierDismissible: true,
+      barrierColor: Colors.black87,
+    );
+  }
+
+  Widget _buildDialogHeader(Color projectColor, bool isMobile) {
+    return Container(
+      padding: EdgeInsets.all(isMobile ? 20 : 28),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+            projectColor.withOpacity(0.2),
+            projectColor.withOpacity(0.05),
+          ],
+        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border(
+          bottom: BorderSide(color: projectColor.withOpacity(0.3)),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(colors: [projectColor, projectColor.withOpacity(0.7)]),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              widget.project.projectType == 'web' ? Icons.language : Icons.smartphone,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.project.title,
+                  style: AppTextStyles.headline3.copyWith(
+                    fontSize: Get.width > 768 ? 26 : 20,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                SizedBox(height: 4),
+                Text(
+                  widget.project.projectType == 'web' ? 'Web Application' : 'Mobile Application',
+                  style: TextStyle(
+                    color: projectColor,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: () => Get.back(),
+              icon: Icon(Icons.close, color: Colors.white, size: 24),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDialogContent(Color projectColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (widget.project.images.isNotEmpty) ...[
+          _buildImageGallery(projectColor),
+          SizedBox(height: 40),
+        ],
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: _buildInfoSection(
+                'Overview',
+                widget.project.description,
+                Icons.info_outline,
+                projectColor,
+              ),
+            ),
+            SizedBox(width: 20),
+            _buildQuickLinks(projectColor),
+          ],
+        ),
+        SizedBox(height: 32),
+        if (widget.project.details.isNotEmpty) ...[
+          _buildInfoSection(
+            'Detailed Description',
+            widget.project.details,
+            Icons.description,
+            projectColor,
+          ),
+          SizedBox(height: 32),
+        ],
+        if (widget.project.features.isNotEmpty) ...[
+          _buildFeaturesSection(projectColor),
+          SizedBox(height: 32),
+        ],
+        _buildTechnologiesSection(projectColor),
+      ],
+    );
+  }
+
+  Widget _buildQuickLinks(Color projectColor) {
+    final isMobile = Get.width < 768;
+
+    if (isMobile) {
+      return SizedBox();
+    }
+
+    return Column(
+      children: [
+        if (widget.project.projectType == 'web')
+          _buildLinkIconButton(
+            icon: Icons.language,
+            label: 'Website',
+            isActive: widget.project.liveUrl != null && widget.project.liveUrl!.isNotEmpty,
+            color: projectColor,
+            onTap: () => _launchUrl(widget.project.liveUrl ?? ''),
+          )
+        else ...[
+          _buildLinkIconButton(
+            icon: Icons.shop,
+            label: 'Play Store',
+            isActive: widget.project.playStoreUrl != null && widget.project.playStoreUrl!.isNotEmpty,
+            color: Color(0xFF10b981),
+            onTap: () => _launchUrl(widget.project.playStoreUrl ?? ''),
+          ),
+          SizedBox(height: 12),
+          _buildLinkIconButton(
+            icon: Icons.apple,
+            label: 'App Store',
+            isActive: widget.project.appStoreUrl != null && widget.project.appStoreUrl!.isNotEmpty,
+            color: Color(0xFF3b82f6),
+            onTap: () => _launchUrl(widget.project.appStoreUrl ?? ''),
+          ),
+          SizedBox(height: 12),
+          _buildLinkIconButton(
+            icon: Icons.android,
+            label: 'APK',
+            isActive: widget.project.apkUrl != null && widget.project.apkUrl!.isNotEmpty,
+            color: AppColors.purple,
+            onTap: () => _launchUrl(widget.project.apkUrl ?? ''),
+          ),
+        ],
+        if (widget.project.githubUrl != null && widget.project.githubUrl!.isNotEmpty) ...[
+          SizedBox(height: 12),
+          _buildLinkIconButton(
+            icon: Icons.code,
+            label: 'GitHub',
+            isActive: true,
+            color: Colors.white70,
+            onTap: () => _launchUrl(widget.project.githubUrl!),
+          ),
+        ],
+      ],
+    );
+  }
+
+  Widget _buildLinkIconButton({
+    required IconData icon,
+    required String label,
+    required bool isActive,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return Tooltip(
+      message: label,
+      child: InkWell(
+        onTap: isActive ? onTap : null,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 120,
+          padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          decoration: BoxDecoration(
+            color: isActive ? color.withOpacity(0.15) : Colors.white.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isActive ? color.withOpacity(0.5) : Colors.white24,
+              width: 1.5,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                color: isActive ? color : Colors.white24,
+                size: 24,
+              ),
+              SizedBox(height: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isActive ? color : Colors.white24,
+                  fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildImageGallery(Color projectColor) {
+    if (widget.project.images.length == 1) {
+      return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: projectColor.withOpacity(0.3), width: 2),
+          boxShadow: [
+            BoxShadow(
+              color: projectColor.withOpacity(0.2),
+              blurRadius: 20,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(18),
+          child: NetworkImageWithFallback(
+            imageUrl: _convertDriveUrl(widget.project.images.first),
+            width: double.infinity,
+            height: Get.width > 768 ? 450 : 280,
+          ),
+        ),
+      );
+    }
+
+    return Column(
+      children: widget.project.images.asMap().entries.map((entry) {
+        return Container(
+          margin: EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: projectColor.withOpacity(0.3), width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: projectColor.withOpacity(0.2),
+                blurRadius: 20,
+              ),
+            ],
+          ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(18),
+            child: NetworkImageWithFallback(
+              imageUrl: _convertDriveUrl(entry.value),
+              width: double.infinity,
+              height: Get.width > 768 ? 450 : 280,
+            ),
+          ),
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildInfoSection(String title, String content, IconData icon, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(colors: [color, color.withOpacity(0.7)]),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: Colors.white, size: 20),
+            ),
+            SizedBox(width: 12),
+            Text(
+              title,
+              style: AppTextStyles.headline3.copyWith(
+                fontSize: Get.width > 768 ? 24 : 20,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16),
+        Container(
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: color.withOpacity(0.05),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: color.withOpacity(0.2)),
+          ),
+          child: Text(
+            content,
+            style: AppTextStyles.body1.copyWith(height: 1.7),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFeaturesSection(Color projectColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [projectColor, projectColor.withOpacity(0.7)],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.star, color: Colors.white, size: 20),
+            ),
+            SizedBox(width: 12),
+            Text(
+              'Key Features',
+              style: AppTextStyles.headline3.copyWith(
+                fontSize: Get.width > 768 ? 24 : 20,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        ...widget.project.features.asMap().entries.map((entry) {
+          return Container(
+            margin: EdgeInsets.only(bottom: 12),
+            padding: EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: projectColor.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: projectColor.withOpacity(0.2)),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(top: 2),
+                  padding: EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [projectColor, projectColor.withOpacity(0.7)],
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '${entry.key + 1}',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    entry.value,
+                    style: AppTextStyles.body1.copyWith(height: 1.6),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+      ],
+    );
+  }
+
+  Widget _buildTechnologiesSection(Color projectColor) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [projectColor, projectColor.withOpacity(0.7)],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.code, color: Colors.white, size: 20),
+            ),
+            SizedBox(width: 12),
+            Text(
+              'Technologies Used',
+              style: AppTextStyles.headline3.copyWith(
+                fontSize: Get.width > 768 ? 24 : 20,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 20),
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: widget.project.technologies.map<Widget>((tech) {
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    projectColor.withOpacity(0.2),
+                    projectColor.withOpacity(0.1),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: projectColor.withOpacity(0.5), width: 1.5),
+              ),
+              child: Text(
+                tech,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionButtons(Color projectColor) {
     final links = <Map<String, dynamic>>[];
 
-    if (project.projectType == 'web') {
-      if (project.liveUrl != null && project.liveUrl!.isNotEmpty) {
+    if (widget.project.projectType == 'web') {
+      if (widget.project.liveUrl != null && widget.project.liveUrl!.isNotEmpty) {
         links.add({
-          'icon': Icons.web,
+          'icon': Icons.language,
           'label': 'Visit Website',
-          'url': project.liveUrl,
-          'color': AppColors.cyan,
+          'url': widget.project.liveUrl,
+          'color': projectColor,
         });
       }
     } else {
-      if (project.playStoreUrl != null && project.playStoreUrl!.isNotEmpty) {
+      if (widget.project.playStoreUrl != null && widget.project.playStoreUrl!.isNotEmpty) {
         links.add({
           'icon': Icons.shop,
-          'label': 'Get on Play Store',
-          'url': project.playStoreUrl,
-          'color': Colors.green,
+          'label': 'Play Store',
+          'url': widget.project.playStoreUrl,
+          'color': Color(0xFF10b981),
         });
       }
-      if (project.appStoreUrl != null && project.appStoreUrl!.isNotEmpty) {
+      if (widget.project.appStoreUrl != null && widget.project.appStoreUrl!.isNotEmpty) {
         links.add({
           'icon': Icons.apple,
-          'label': 'Get on App Store',
-          'url': project.appStoreUrl,
-          'color': Colors.blue,
+          'label': 'App Store',
+          'url': widget.project.appStoreUrl,
+          'color': Color(0xFF3b82f6),
         });
       }
-      if (project.apkUrl != null && project.apkUrl!.isNotEmpty) {
+      if (widget.project.apkUrl != null && widget.project.apkUrl!.isNotEmpty) {
         links.add({
-          'icon': Icons.download,
+          'icon': Icons.android,
           'label': 'Download APK',
-          'url': project.apkUrl,
+          'url': widget.project.apkUrl,
           'color': AppColors.purple,
         });
       }
     }
 
-    if (project.githubUrl != null && project.githubUrl!.isNotEmpty) {
+    if (widget.project.githubUrl != null && widget.project.githubUrl!.isNotEmpty) {
       links.add({
         'icon': Icons.code,
-        'label': 'View Source Code',
-        'url': project.githubUrl,
+        'label': 'Source Code',
+        'url': widget.project.githubUrl,
         'color': Colors.white70,
       });
     }
 
     if (links.isEmpty) {
       return Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(24),
         decoration: BoxDecoration(
           color: Colors.orange.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(color: Colors.orange.withOpacity(0.3)),
         ),
         child: Row(
           children: [
-            Icon(Icons.info_outline, color: Colors.orange),
-            SizedBox(width: 12),
+            Icon(Icons.info_outline, color: Colors.orange, size: 24),
+            SizedBox(width: 16),
             Expanded(
               child: Text(
                 'No download or preview links available for this project',
-                style: AppTextStyles.body2.copyWith(color: Colors.orange),
+                style: AppTextStyles.body1.copyWith(color: Colors.orange),
               ),
             ),
           ],
@@ -496,31 +992,37 @@ class _ProjectCard extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'Quick Access',
-          style: AppTextStyles.headline3.copyWith(fontSize: Get.width > 768 ? 22 : 18),
+        Row(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [projectColor, projectColor.withOpacity(0.7)],
+                ),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.link, color: Colors.white, size: 20),
+            ),
+            SizedBox(width: 12),
+            Text(
+              'Quick Access',
+              style: AppTextStyles.headline3.copyWith(
+                fontSize: Get.width > 768 ? 24 : 20,
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: 16),
+        SizedBox(height: 20),
         Wrap(
           spacing: 16,
           runSpacing: 16,
           children: links.map((link) {
-            return ElevatedButton.icon(
-              onPressed: () => _launchUrl(link['url']),
-              icon: Icon(link['icon'], size: 20),
-              label: Text(link['label']),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: (link['color'] as Color).withOpacity(0.15),
-                foregroundColor: link['color'],
-                side: BorderSide(color: link['color'], width: 1.5),
-                padding: EdgeInsets.symmetric(
-                  horizontal: Get.width > 768 ? 24 : 16,
-                  vertical: Get.width > 768 ? 16 : 12,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+            return _ActionButton(
+              icon: link['icon'],
+              label: link['label'],
+              color: link['color'],
+              onTap: () => _launchUrl(link['url']),
             );
           }).toList(),
         ),
@@ -571,5 +1073,85 @@ class _ProjectCard extends StatelessWidget {
         colorText: Colors.white,
       );
     }
+  }
+}
+
+class _ActionButton extends StatefulWidget {
+  final IconData icon;
+  final String label;
+  final Color color;
+  final VoidCallback onTap;
+
+  const _ActionButton({
+    required this.icon,
+    required this.label,
+    required this.color,
+    required this.onTap,
+  });
+
+  @override
+  State<_ActionButton> createState() => _ActionButtonState();
+}
+
+class _ActionButtonState extends State<_ActionButton> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(
+            horizontal: Get.width > 768 ? 28 : 20,
+            vertical: Get.width > 768 ? 16 : 14,
+          ),
+          decoration: BoxDecoration(
+            gradient: _isHovered
+                ? LinearGradient(
+              colors: [widget.color, widget.color.withOpacity(0.8)],
+            )
+                : null,
+            color: _isHovered ? null : widget.color.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: widget.color,
+              width: _isHovered ? 2 : 1.5,
+            ),
+            boxShadow: _isHovered
+                ? [
+              BoxShadow(
+                color: widget.color.withOpacity(0.4),
+                blurRadius: 16,
+                spreadRadius: 2,
+              ),
+            ]
+                : [],
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                widget.icon,
+                size: 20,
+                color: _isHovered ? Colors.white : widget.color,
+              ),
+              SizedBox(width: 10),
+              Text(
+                widget.label,
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: _isHovered ? Colors.white : widget.color,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
