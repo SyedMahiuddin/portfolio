@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../data/models/message_model.dart';
 import '../../data/models/profile_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/experience_model.dart';
@@ -62,6 +63,9 @@ class AdminController extends GetxController {
   final expEndDateController = TextEditingController();
   final RxBool expIsCurrently = false.obs;
 
+  final RxList<MessageModel> messages = <MessageModel>[].obs;
+  final RxInt unreadCount = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -74,6 +78,7 @@ class AdminController extends GetxController {
       loadProfile(),
       loadProjects(),
       loadExperiences(),
+      loadMessages(),
     ]);
     isLoading.value = false;
   }
@@ -437,6 +442,22 @@ class AdminController extends GetxController {
     expStartDateController.text = exp.startDate;
     expEndDateController.text = exp.endDate ?? '';
     expIsCurrently.value = exp.isCurrently;
+  }
+
+  Future<void> loadMessages() async {
+    final data = await _repository.getMessages();
+    messages.value = data;
+    unreadCount.value = data.where((m) => !m.isRead).length;
+  }
+
+  Future<void> markAsRead(String id) async {
+    await _repository.markMessageAsRead(id);
+    await loadMessages();
+  }
+
+  Future<void> deleteMessage(String id) async {
+    await _repository.deleteMessage(id);
+    await loadMessages();
   }
 
   void clearProjectForm() {

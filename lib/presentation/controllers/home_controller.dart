@@ -1,4 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../data/models/message_model.dart';
 import '../../data/models/profile_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/experience_model.dart';
@@ -11,11 +13,44 @@ class HomeController extends GetxController {
   final RxList<ProjectModel> projects = <ProjectModel>[].obs;
   final RxList<ExperienceModel> experiences = <ExperienceModel>[].obs;
   final RxBool isLoading = true.obs;
+  final RxBool isSendingMessage = false.obs;
 
   @override
   void onInit() {
     super.onInit();
     loadData();
+  }
+
+  Future<void> sendMessage({
+    required String name,
+    required String company,
+    required String email,
+    required String phone,
+    required String message,
+  }) async {
+    try {
+      isSendingMessage.value = true;
+      final newMessage = MessageModel(
+        id: '',
+        name: name,
+        company: company,
+        email: email,
+        phone: phone,
+        message: message,
+        createdAt: DateTime.now(),
+        isRead: false,
+      );
+      await _repository.sendMessage(newMessage);
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to send message. Please try again.',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isSendingMessage.value = false;
+    }
   }
 
   Future<void> loadData() async {

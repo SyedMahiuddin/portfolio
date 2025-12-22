@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:portfolio_web/presentation/pages/home/widgets/send_message_section.dart';
 import 'package:portfolio_web/presentation/pages/home/widgets/technical_skils_selection.dart';
 import '../../controllers/home_controller.dart';
 import '../../widgets/portfolio_navbar.dart';
@@ -45,27 +46,13 @@ class HomePage extends GetView<HomeController> {
               child: Column(
                 children: [
                   SizedBox(height: 80),
-                  Container(
-                    key: _sectionKeys[0],
-                    child: HeroSection(),
-                  ),
+                  Container(key: _sectionKeys[0], child: HeroSection()),
                   BentoGrid(),
-                  Container(
-                    key: _sectionKeys[1],
-                    child: TechnicalSkillsSection(),
-                  ),
-                  Container(
-                    key: _sectionKeys[2],
-                    child: ProjectsSection(),
-                  ),
-                  Container(
-                    key: _sectionKeys[3],
-                    child: ExperienceSection(),
-                  ),
-                  Container(
-                    key: _sectionKeys[4],
-                    child: ContactSection(),
-                  ),
+                  Container(key: _sectionKeys[1], child: TechnicalSkillsSection()),
+                  Container(key: _sectionKeys[2], child: ProjectsSection()),
+                  Container(key: _sectionKeys[3], child: ExperienceSection()),
+                  Container(key: _sectionKeys[4], child: ContactSection()),
+                  SendMessageSection(),
                   _buildFooter(),
                 ],
               ),

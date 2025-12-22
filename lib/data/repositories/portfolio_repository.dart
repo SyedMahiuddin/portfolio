@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/message_model.dart';
 import '../models/profile_model.dart';
 import '../models/project_model.dart';
 import '../models/experience_model.dart';
@@ -44,6 +45,32 @@ class PortfolioRepository {
     } catch (e) {
       return [];
     }
+  }
+
+  Future<void> sendMessage(MessageModel message) async {
+    await _firestore.collection('messages').add(message.toJson());
+  }
+
+  Future<List<MessageModel>> getMessages() async {
+    try {
+      final snapshot = await _firestore
+          .collection('messages')
+          .orderBy('createdAt', descending: true)
+          .get();
+      return snapshot.docs
+          .map((doc) => MessageModel.fromJson({...doc.data(), 'id': doc.id}))
+          .toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<void> markMessageAsRead(String id) async {
+    await _firestore.collection('messages').doc(id).update({'isRead': true});
+  }
+
+  Future<void> deleteMessage(String id) async {
+    await _firestore.collection('messages').doc(id).delete();
   }
 
   Future<void> updateProfile(ProfileModel profile) async {

@@ -58,6 +58,13 @@ class AdminSidebar extends GetView<AdminController> {
                   index: 2,
                   isSelected: controller.selectedTab.value == 2,
                 ),
+                _buildMenuItem(
+                  icon: Icons.mail,
+                  title: 'Messages',
+                  index: 3,
+                  isSelected: controller.selectedTab.value == 3,
+                  badge: controller.unreadCount.value > 0 ? controller.unreadCount.value : null,
+                ),
               ],
             )),
           ),
@@ -87,6 +94,7 @@ class AdminSidebar extends GetView<AdminController> {
     required String title,
     required int index,
     required bool isSelected,
+    int? badge,
   }) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -97,12 +105,34 @@ class AdminSidebar extends GetView<AdminController> {
       ),
       child: ListTile(
         leading: Icon(icon, color: isSelected ? AppColors.purple : Colors.white70),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? AppColors.purple : Colors.white70,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
+        title: Row(
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? AppColors.purple : Colors.white70,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
+            ),
+            if (badge != null) ...[
+              SizedBox(width: 8),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.red,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '$badge',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ],
         ),
         onTap: () => Get.find<AdminController>().selectedTab.value = index,
       ),
