@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../data/models/education_model.dart';
 import '../../data/models/message_model.dart';
 import '../../data/models/profile_model.dart';
 import '../../data/models/project_model.dart';
@@ -14,6 +15,7 @@ class HomeController extends GetxController {
   final RxList<ExperienceModel> experiences = <ExperienceModel>[].obs;
   final RxBool isLoading = true.obs;
   final RxBool isSendingMessage = false.obs;
+  final RxList<EducationModel> educations = <EducationModel>[].obs;
 
   @override
   void onInit() {
@@ -53,12 +55,18 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> loadEducations() async {
+    final data = await _repository.getEducations();
+    educations.value = data;
+  }
+
   Future<void> loadData() async {
     isLoading.value = true;
     await Future.wait([
       loadProfile(),
       loadProjects(),
       loadExperiences(),
+      loadEducations(),
     ]);
     isLoading.value = false;
   }

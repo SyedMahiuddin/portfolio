@@ -5,6 +5,7 @@ import '../../data/models/message_model.dart';
 import '../../data/models/profile_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/experience_model.dart';
+import '../../data/models/education_model.dart';
 import '../../data/repositories/portfolio_repository.dart';
 
 class AdminController extends GetxController {
@@ -14,6 +15,7 @@ class AdminController extends GetxController {
   final Rx<ProfileModel?> profile = Rx<ProfileModel?>(null);
   final RxList<ProjectModel> projects = <ProjectModel>[].obs;
   final RxList<ExperienceModel> experiences = <ExperienceModel>[].obs;
+  final RxList<EducationModel> educations = <EducationModel>[].obs;
   final RxBool isLoading = false.obs;
   final RxInt selectedTab = 0.obs;
 
@@ -30,7 +32,7 @@ class AdminController extends GetxController {
   final emailController = TextEditingController();
   final linkedinController = TextEditingController();
   final githubController = TextEditingController();
-  final phoneController = TextEditingController(); // Added phone controller
+  final phoneController = TextEditingController();
 
   // Skills Controllers
   final RxMap<String, List<String>> technicalSkills = <String, List<String>>{}.obs;
@@ -63,6 +65,15 @@ class AdminController extends GetxController {
   final expEndDateController = TextEditingController();
   final RxBool expIsCurrently = false.obs;
 
+  // Education Controllers
+  final eduInstitutionController = TextEditingController();
+  final eduDegreeController = TextEditingController();
+  final eduFieldController = TextEditingController();
+  final eduDescController = TextEditingController();
+  final eduStartDateController = TextEditingController();
+  final eduEndDateController = TextEditingController();
+  final RxBool eduIsCurrently = false.obs;
+
   final RxList<MessageModel> messages = <MessageModel>[].obs;
   final RxInt unreadCount = 0.obs;
 
@@ -78,6 +89,7 @@ class AdminController extends GetxController {
       loadProfile(),
       loadProjects(),
       loadExperiences(),
+      loadEducations(),
       loadMessages(),
     ]);
     isLoading.value = false;
@@ -112,6 +124,11 @@ class AdminController extends GetxController {
   Future<void> loadExperiences() async {
     final data = await _repository.getExperiences();
     experiences.value = data;
+  }
+
+  Future<void> loadEducations() async {
+    final data = await _repository.getEducations();
+    educations.value = data;
   }
 
   Future<void> updateProfile() async {
@@ -188,7 +205,6 @@ class AdminController extends GetxController {
     selectedSkillCategory.value = category;
   }
 
-  // Project Methods
   Future<void> addProject() async {
     try {
       isLoading.value = true;
@@ -207,6 +223,7 @@ class AdminController extends GetxController {
         appStoreUrl: projectAppStoreController.text.isEmpty ? null : projectAppStoreController.text,
         apkUrl: projectApkUrlController.text.isEmpty ? null : projectApkUrlController.text,
         createdAt: DateTime.now(),
+        orderIndex: projects.length,
       );
       await _repository.addProject(newProject);
       await loadProjects();
@@ -248,6 +265,7 @@ class AdminController extends GetxController {
         appStoreUrl: projectAppStoreController.text.isEmpty ? null : projectAppStoreController.text,
         apkUrl: projectApkUrlController.text.isEmpty ? null : projectApkUrlController.text,
         createdAt: project.createdAt,
+        orderIndex: project.orderIndex,
       );
       await _repository.updateProject(updatedProject);
       await loadProjects();
@@ -271,30 +289,6 @@ class AdminController extends GetxController {
     }
   }
 
-  Future<void> deleteProject(String id) async {
-    try {
-      isLoading.value = true;
-      await _repository.deleteProject(id);
-      await loadProjects();
-      Get.snackbar(
-        'Success',
-        'Project deleted successfully',
-        backgroundColor: Colors.green.withOpacity(0.8),
-        colorText: Colors.white,
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to delete project: $e',
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  // Experience Methods
   Future<void> addExperience() async {
     try {
       isLoading.value = true;
@@ -306,6 +300,7 @@ class AdminController extends GetxController {
         startDate: expStartDateController.text,
         endDate: expIsCurrently.value ? null : expEndDateController.text,
         isCurrently: expIsCurrently.value,
+        orderIndex: experiences.length,
       );
       await _repository.addExperience(newExp);
       await loadExperiences();
@@ -340,6 +335,7 @@ class AdminController extends GetxController {
         startDate: expStartDateController.text,
         endDate: expIsCurrently.value ? null : expEndDateController.text,
         isCurrently: expIsCurrently.value,
+        orderIndex: exp.orderIndex,
       );
       await _repository.updateExperience(updatedExp);
       await loadExperiences();
@@ -363,6 +359,30 @@ class AdminController extends GetxController {
     }
   }
 
+  Future<void> deleteProject(String id) async {
+    try {
+      isLoading.value = true;
+      await _repository.deleteProject(id);
+      await loadProjects();
+      Get.snackbar(
+        'Success',
+        'Project deleted successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to delete project: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
   Future<void> deleteExperience(String id) async {
     try {
       isLoading.value = true;
@@ -384,6 +404,145 @@ class AdminController extends GetxController {
     } finally {
       isLoading.value = false;
     }
+  }
+
+  // Education Methods
+  Future<void> addEducation() async {
+    try {
+      isLoading.value = true;
+      final newEdu = EducationModel(
+        id: '',
+        institution: eduInstitutionController.text,
+        degree: eduDegreeController.text,
+        field: eduFieldController.text,
+        description: eduDescController.text,
+        startDate: eduStartDateController.text,
+        endDate: eduIsCurrently.value ? null : eduEndDateController.text,
+        isCurrently: eduIsCurrently.value,
+        orderIndex: educations.length,
+      );
+      await _repository.addEducation(newEdu);
+      await loadEducations();
+      clearEducationForm();
+      Get.back();
+      Get.snackbar(
+        'Success',
+        'Education added successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to add education: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> updateEducation(EducationModel edu) async {
+    try {
+      isLoading.value = true;
+      final updatedEdu = EducationModel(
+        id: edu.id,
+        institution: eduInstitutionController.text,
+        degree: eduDegreeController.text,
+        field: eduFieldController.text,
+        description: eduDescController.text,
+        startDate: eduStartDateController.text,
+        endDate: eduIsCurrently.value ? null : eduEndDateController.text,
+        isCurrently: eduIsCurrently.value,
+        orderIndex: edu.orderIndex,
+      );
+      await _repository.updateEducation(updatedEdu);
+      await loadEducations();
+      clearEducationForm();
+      Get.back();
+      Get.snackbar(
+        'Success',
+        'Education updated successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to update education: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteEducation(String id) async {
+    try {
+      isLoading.value = true;
+      await _repository.deleteEducation(id);
+      await loadEducations();
+      Get.snackbar(
+        'Success',
+        'Education deleted successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to delete education: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Reordering Methods
+  void reorderProjects(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = projects.removeAt(oldIndex);
+    projects.insert(newIndex, item);
+
+    for (int i = 0; i < projects.length; i++) {
+      projects[i] = projects[i].copyWith(orderIndex: i);
+    }
+
+    _repository.updateProjectOrder(projects);
+  }
+
+  void reorderExperiences(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = experiences.removeAt(oldIndex);
+    experiences.insert(newIndex, item);
+
+    for (int i = 0; i < experiences.length; i++) {
+      experiences[i] = experiences[i].copyWith(orderIndex: i);
+    }
+
+    _repository.updateExperienceOrder(experiences);
+  }
+
+  void reorderEducations(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    final item = educations.removeAt(oldIndex);
+    educations.insert(newIndex, item);
+
+    for (int i = 0; i < educations.length; i++) {
+      educations[i] = educations[i].copyWith(orderIndex: i);
+    }
+
+    _repository.updateEducationOrder(educations);
   }
 
   // Project Helper Methods
@@ -420,6 +579,7 @@ class AdminController extends GetxController {
     projectImages.removeAt(index);
   }
 
+  // Edit Methods
   void editProject(ProjectModel project) {
     projectTitleController.text = project.title;
     projectDescController.text = project.description;
@@ -444,22 +604,17 @@ class AdminController extends GetxController {
     expIsCurrently.value = exp.isCurrently;
   }
 
-  Future<void> loadMessages() async {
-    final data = await _repository.getMessages();
-    messages.value = data;
-    unreadCount.value = data.where((m) => !m.isRead).length;
+  void editEducation(EducationModel edu) {
+    eduInstitutionController.text = edu.institution;
+    eduDegreeController.text = edu.degree;
+    eduFieldController.text = edu.field;
+    eduDescController.text = edu.description;
+    eduStartDateController.text = edu.startDate;
+    eduEndDateController.text = edu.endDate ?? '';
+    eduIsCurrently.value = edu.isCurrently;
   }
 
-  Future<void> markAsRead(String id) async {
-    await _repository.markMessageAsRead(id);
-    await loadMessages();
-  }
-
-  Future<void> deleteMessage(String id) async {
-    await _repository.deleteMessage(id);
-    await loadMessages();
-  }
-
+  // Form Clearing Methods
   void clearProjectForm() {
     projectTitleController.clear();
     projectDescController.clear();
@@ -487,12 +642,40 @@ class AdminController extends GetxController {
     expIsCurrently.value = false;
   }
 
+  void clearEducationForm() {
+    eduInstitutionController.clear();
+    eduDegreeController.clear();
+    eduFieldController.clear();
+    eduDescController.clear();
+    eduStartDateController.clear();
+    eduEndDateController.clear();
+    eduIsCurrently.value = false;
+  }
+
   void clearSkillsForm() {
     skillCategoryController.clear();
     skillItemController.clear();
     selectedSkillCategory.value = '';
   }
 
+  // Messages Methods
+  Future<void> loadMessages() async {
+    final data = await _repository.getMessages();
+    messages.value = data;
+    unreadCount.value = data.where((m) => !m.isRead).length;
+  }
+
+  Future<void> markAsRead(String id) async {
+    await _repository.markMessageAsRead(id);
+    await loadMessages();
+  }
+
+  Future<void> deleteMessage(String id) async {
+    await _repository.deleteMessage(id);
+    await loadMessages();
+  }
+
+  // Logout
   Future<void> logout() async {
     await _auth.signOut();
     Get.offAllNamed('/');
@@ -531,6 +714,12 @@ class AdminController extends GetxController {
     expDescController.dispose();
     expStartDateController.dispose();
     expEndDateController.dispose();
+    eduInstitutionController.dispose();
+    eduDegreeController.dispose();
+    eduFieldController.dispose();
+    eduDescController.dispose();
+    eduStartDateController.dispose();
+    eduEndDateController.dispose();
     super.onClose();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:portfolio_web/presentation/pages/admin/widgets/education_tab.dart';
 import 'package:portfolio_web/presentation/pages/admin/widgets/message_tab.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
@@ -193,6 +194,8 @@ class AdminPage extends GetView<AdminController> {
                   return ExperienceTab();
                 case 3:
                   return MessagesTab();
+                case 4:
+                  return EducationTab();
                 default:
                   return ProfileTab();
               }

@@ -6,6 +6,7 @@ class ExperienceModel {
   final String startDate;
   final String? endDate;
   final bool isCurrently;
+  final int orderIndex;
 
   ExperienceModel({
     required this.id,
@@ -15,6 +16,7 @@ class ExperienceModel {
     required this.startDate,
     this.endDate,
     required this.isCurrently,
+    required this.orderIndex,
   });
 
   factory ExperienceModel.fromJson(Map<String, dynamic> json) {
@@ -26,6 +28,7 @@ class ExperienceModel {
       startDate: json['startDate'] ?? '',
       endDate: json['endDate'],
       isCurrently: json['isCurrently'] ?? false,
+      orderIndex: json['orderIndex'] ?? 0,
     );
   }
 
@@ -38,6 +41,20 @@ class ExperienceModel {
       'startDate': startDate,
       'endDate': endDate,
       'isCurrently': isCurrently,
+      'orderIndex': orderIndex,
     };
+  }
+
+  ExperienceModel copyWith({int? orderIndex}) {
+    return ExperienceModel(
+      id: id,
+      company: company,
+      position: position,
+      description: description,
+      startDate: startDate,
+      endDate: endDate,
+      isCurrently: isCurrently,
+      orderIndex: orderIndex ?? this.orderIndex,
+    );
   }
 }

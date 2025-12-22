@@ -65,6 +65,12 @@ class AdminSidebar extends GetView<AdminController> {
                   isSelected: controller.selectedTab.value == 3,
                   badge: controller.unreadCount.value > 0 ? controller.unreadCount.value : null,
                 ),
+                _buildMenuItem(
+                  icon: Icons.school,
+                  title: 'Education',
+                  index: 4,
+                  isSelected: controller.selectedTab.value == 4,
+                ),
               ],
             )),
           ),

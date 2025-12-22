@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_text_styles.dart';
 import '../../../controllers/admin_controller.dart';
-import '../../../../data/models/experience_model.dart';
+import '../../../../data/models/education_model.dart';
 
-class ExperienceTab extends GetView<AdminController> {
+class EducationTab extends GetView<AdminController> {
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -16,13 +16,13 @@ class ExperienceTab extends GetView<AdminController> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Work Experience',
+                'Education',
                 style: AppTextStyles.headline2,
               ),
               ElevatedButton.icon(
-                onPressed: () => _showExperienceDialog(),
+                onPressed: () => _showEducationDialog(),
                 icon: Icon(Icons.add),
-                label: Text('Add Experience'),
+                label: Text('Add Education'),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.purple,
                   padding: EdgeInsets.symmetric(horizontal: 24, vertical: 16),
@@ -37,11 +37,11 @@ class ExperienceTab extends GetView<AdminController> {
         Expanded(
           child: Obx(() => ReorderableListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 32),
-            itemCount: controller.experiences.length,
-            onReorder: controller.reorderExperiences,
+            itemCount: controller.educations.length,
+            onReorder: controller.reorderEducations,
             itemBuilder: (context, index) {
-              final exp = controller.experiences[index];
-              return _buildExperienceCardDraggable(exp, key: ValueKey(exp.id));
+              final edu = controller.educations[index];
+              return _buildEducationCard(edu, index, key: ValueKey(edu.id));
             },
           )),
         ),
@@ -49,23 +49,9 @@ class ExperienceTab extends GetView<AdminController> {
     );
   }
 
-  Widget _buildExperienceCardDraggable(exp, {required Key key}) {
+  Widget _buildEducationCard(EducationModel edu, int index, {required Key key}) {
     return Container(
       key: key,
-      margin: EdgeInsets.only(bottom: 20),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(Icons.drag_indicator, color: Colors.white38, size: 24),
-          SizedBox(width: 12),
-          Expanded(child: _buildExperienceCard(exp)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildExperienceCard(ExperienceModel exp) {
-    return Container(
       margin: EdgeInsets.only(bottom: 20),
       padding: EdgeInsets.all(24),
       decoration: BoxDecoration(
@@ -76,14 +62,16 @@ class ExperienceTab extends GetView<AdminController> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Icon(Icons.drag_indicator, color: Colors.white38),
+          SizedBox(width: 16),
           Container(
             width: 70,
             height: 70,
             decoration: BoxDecoration(
-              gradient: LinearGradient(colors: AppColors.gradientColors),
+              gradient: LinearGradient(colors: [AppColors.cyan, AppColors.purple]),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(Icons.business, color: Colors.white, size: 35),
+            child: Icon(Icons.school, color: Colors.white, size: 35),
           ),
           SizedBox(width: 20),
           Expanded(
@@ -91,22 +79,27 @@ class ExperienceTab extends GetView<AdminController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  exp.position,
-                  style: AppTextStyles.headline3.copyWith(fontSize: 22),
+                  edu.degree,
+                  style: AppTextStyles.headline3.copyWith(fontSize: 20),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  edu.field,
+                  style: AppTextStyles.body1.copyWith(color: AppColors.cyan),
                 ),
                 SizedBox(height: 8),
                 Text(
-                  exp.company,
-                  style: AppTextStyles.body1.copyWith(color: AppColors.purple),
+                  edu.institution,
+                  style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.w600),
                 ),
                 SizedBox(height: 12),
                 Text(
-                  exp.description,
+                  edu.description,
                   style: AppTextStyles.body2,
                 ),
                 SizedBox(height: 12),
                 Text(
-                  '${exp.startDate} - ${exp.endDate ?? 'Present'}',
+                  '${edu.startDate} - ${edu.endDate ?? 'Present'}',
                   style: AppTextStyles.body2.copyWith(color: Colors.white60),
                 ),
               ],
@@ -114,25 +107,25 @@ class ExperienceTab extends GetView<AdminController> {
           ),
           Column(
             children: [
-              if (exp.isCurrently)
+              if (edu.isCurrently)
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: AppColors.cyan.withOpacity(0.2),
+                    color: AppColors.purple.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: AppColors.cyan),
+                    border: Border.all(color: AppColors.purple),
                   ),
-                  child: Text('Currently', style: TextStyle(color: AppColors.cyan, fontSize: 12)),
+                  child: Text('Currently', style: TextStyle(color: AppColors.purple, fontSize: 12)),
                 ),
               SizedBox(height: 12),
               Row(
                 children: [
                   IconButton(
-                    onPressed: () => _showExperienceDialog(exp: exp),
+                    onPressed: () => _showEducationDialog(edu: edu),
                     icon: Icon(Icons.edit, color: AppColors.cyan),
                   ),
                   IconButton(
-                    onPressed: () => _deleteExperience(exp.id),
+                    onPressed: () => _deleteEducation(edu.id),
                     icon: Icon(Icons.delete, color: Colors.red),
                   ),
                 ],
@@ -144,13 +137,13 @@ class ExperienceTab extends GetView<AdminController> {
     );
   }
 
-  void _showExperienceDialog({ExperienceModel? exp}) {
-    final isEdit = exp != null;
+  void _showEducationDialog({EducationModel? edu}) {
+    final isEdit = edu != null;
 
     if (isEdit) {
-      controller.editExperience(exp);
+      controller.editEducation(edu);
     } else {
-      controller.clearExperienceForm();
+      controller.clearEducationForm();
     }
 
     Get.dialog(
@@ -170,25 +163,31 @@ class ExperienceTab extends GetView<AdminController> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  isEdit ? 'Edit Experience' : 'Add New Experience',
+                  isEdit ? 'Edit Education' : 'Add New Education',
                   style: AppTextStyles.headline3,
                 ),
                 SizedBox(height: 24),
                 _buildTextField(
-                  label: 'Company',
-                  controller: controller.expCompanyController,
-                  icon: Icons.business,
+                  label: 'Institution/University',
+                  controller: controller.eduInstitutionController,
+                  icon: Icons.school,
                 ),
                 SizedBox(height: 16),
                 _buildTextField(
-                  label: 'Position',
-                  controller: controller.expPositionController,
-                  icon: Icons.work,
+                  label: 'Degree',
+                  controller: controller.eduDegreeController,
+                  icon: Icons.workspace_premium,
+                ),
+                SizedBox(height: 16),
+                _buildTextField(
+                  label: 'Field of Study',
+                  controller: controller.eduFieldController,
+                  icon: Icons.menu_book,
                 ),
                 SizedBox(height: 16),
                 _buildTextField(
                   label: 'Description',
-                  controller: controller.expDescController,
+                  controller: controller.eduDescController,
                   icon: Icons.description,
                   maxLines: 4,
                 ),
@@ -198,13 +197,13 @@ class ExperienceTab extends GetView<AdminController> {
                     Expanded(
                       child: _buildTextField(
                         label: 'Start Date (e.g., Jan 2020)',
-                        controller: controller.expStartDateController,
+                        controller: controller.eduStartDateController,
                         icon: Icons.calendar_today,
                       ),
                     ),
                     SizedBox(width: 16),
                     Expanded(
-                      child: Obx(() => controller.expIsCurrently.value
+                      child: Obx(() => controller.eduIsCurrently.value
                           ? Container(
                         height: 74,
                         alignment: Alignment.center,
@@ -212,7 +211,7 @@ class ExperienceTab extends GetView<AdminController> {
                       )
                           : _buildTextField(
                         label: 'End Date (e.g., Dec 2022)',
-                        controller: controller.expEndDateController,
+                        controller: controller.eduEndDateController,
                         icon: Icons.calendar_today,
                       )),
                     ),
@@ -220,9 +219,9 @@ class ExperienceTab extends GetView<AdminController> {
                 ),
                 SizedBox(height: 16),
                 Obx(() => CheckboxListTile(
-                  title: Text('Currently Working', style: AppTextStyles.body1),
-                  value: controller.expIsCurrently.value,
-                  onChanged: (value) => controller.expIsCurrently.value = value ?? false,
+                  title: Text('Currently Studying', style: AppTextStyles.body1),
+                  value: controller.eduIsCurrently.value,
+                  onChanged: (value) => controller.eduIsCurrently.value = value ?? false,
                   activeColor: AppColors.purple,
                   checkColor: Colors.white,
                 )),
@@ -232,7 +231,7 @@ class ExperienceTab extends GetView<AdminController> {
                   children: [
                     TextButton(
                       onPressed: () {
-                        controller.clearExperienceForm();
+                        controller.clearEducationForm();
                         Get.back();
                       },
                       child: Text('Cancel', style: TextStyle(color: Colors.white70)),
@@ -241,9 +240,9 @@ class ExperienceTab extends GetView<AdminController> {
                     ElevatedButton(
                       onPressed: () {
                         if (isEdit) {
-                          controller.updateExperience(exp);
+                          controller.updateEducation(edu);
                         } else {
-                          controller.addExperience();
+                          controller.addEducation();
                         }
                       },
                       child: Text(isEdit ? 'Update' : 'Add'),
@@ -302,12 +301,12 @@ class ExperienceTab extends GetView<AdminController> {
     );
   }
 
-  void _deleteExperience(String id) {
+  void _deleteEducation(String id) {
     Get.dialog(
       AlertDialog(
         backgroundColor: Color(0xFF0D1117),
-        title: Text('Delete Experience', style: AppTextStyles.headline3.copyWith(fontSize: 20)),
-        content: Text('Are you sure you want to delete this experience?', style: AppTextStyles.body1),
+        title: Text('Delete Education', style: AppTextStyles.headline3.copyWith(fontSize: 20)),
+        content: Text('Are you sure you want to delete this education?', style: AppTextStyles.body1),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
@@ -315,7 +314,7 @@ class ExperienceTab extends GetView<AdminController> {
           ),
           ElevatedButton(
             onPressed: () {
-              controller.deleteExperience(id);
+              controller.deleteEducation(id);
               Get.back();
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),

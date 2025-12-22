@@ -15,7 +15,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-   await InitialDataSetup.setupInitialData();
+  // await InitialDataSetup.setupInitialData();
 
   Get.put(KeyboardService());
 

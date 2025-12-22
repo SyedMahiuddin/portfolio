@@ -13,6 +13,7 @@ class ProjectModel {
   final String? appStoreUrl;
   final String? apkUrl;
   final DateTime createdAt;
+  final int orderIndex;
 
   ProjectModel({
     required this.id,
@@ -29,6 +30,7 @@ class ProjectModel {
     this.appStoreUrl,
     this.apkUrl,
     required this.createdAt,
+    required this.orderIndex,
   });
 
   factory ProjectModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class ProjectModel {
       appStoreUrl: json['appStoreUrl'],
       apkUrl: json['apkUrl'],
       createdAt: DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      orderIndex: json['orderIndex'] ?? 0,
     );
   }
 
@@ -66,6 +69,27 @@ class ProjectModel {
       'appStoreUrl': appStoreUrl,
       'apkUrl': apkUrl,
       'createdAt': createdAt.toIso8601String(),
+      'orderIndex': orderIndex,
     };
+  }
+
+  ProjectModel copyWith({int? orderIndex}) {
+    return ProjectModel(
+      id: id,
+      title: title,
+      description: description,
+      details: details,
+      features: features,
+      images: images,
+      technologies: technologies,
+      projectType: projectType,
+      liveUrl: liveUrl,
+      githubUrl: githubUrl,
+      playStoreUrl: playStoreUrl,
+      appStoreUrl: appStoreUrl,
+      apkUrl: apkUrl,
+      createdAt: createdAt,
+      orderIndex: orderIndex ?? this.orderIndex,
+    );
   }
 }

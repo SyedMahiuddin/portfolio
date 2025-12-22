@@ -36,117 +36,167 @@ class ProjectsTab extends GetView<AdminController> {
           ),
         ),
         Expanded(
-          child: Obx(() => GridView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 32),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              crossAxisSpacing: 20,
-              mainAxisSpacing: 20,
-              childAspectRatio: 0.75,
-            ),
-            itemCount: controller.projects.length,
-            itemBuilder: (context, index) {
-              final project = controller.projects[index];
-              return _buildProjectCard(project);
-            },
-          )),
+          child: Obx(() {
+            if (controller.projects.isEmpty) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.work_outline, size: 80, color: Colors.white30),
+                    SizedBox(height: 20),
+                    Text(
+                      'No Projects Yet',
+                      style: AppTextStyles.headline3,
+                    ),
+                    SizedBox(height: 12),
+                    Text(
+                      'Add your first project',
+                      style: AppTextStyles.body1.copyWith(color: Colors.white60),
+                    ),
+                  ],
+                ),
+              );
+            }
+
+            return ReorderableListView.builder(
+              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              itemCount: controller.projects.length,
+              onReorder: controller.reorderProjects,
+              itemBuilder: (context, index) {
+                final project = controller.projects[index];
+                return _buildProjectCard(project, key: ValueKey(project.id));
+              },
+            );
+          }),
         ),
       ],
     );
   }
 
-  Widget _buildProjectCard(ProjectModel project) {
+  Widget _buildProjectCard(ProjectModel project, {required Key key}) {
     return Container(
+      key: key,
+      margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: AppColors.glassBackground,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.glassBorder),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          NetworkImageWithFallback(
-            imageUrl: project.images.isNotEmpty ? project.images.first : null,
-            height: 150,
-            width: double.infinity,
-            fallbackIcon: Icons.image,
-            fallbackIconSize: 60,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Icon(Icons.drag_indicator, color: Colors.white38, size: 28),
           ),
+          if (project.images.isNotEmpty)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: NetworkImageWithFallback(
+                imageUrl: project.images.first,
+                width: 120,
+                height: 120,
+                fallbackIcon: Icons.image,
+                fallbackIconSize: 40,
+              ),
+            )
+          else
+            Container(
+              width: 120,
+              height: 120,
+              decoration: BoxDecoration(
+                color: AppColors.purple.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(Icons.image, size: 40, color: Colors.white30),
+            ),
+          SizedBox(width: 20),
           Expanded(
             child: Padding(
-              padding: EdgeInsets.all(16),
+              padding: EdgeInsets.symmetric(vertical: 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppColors.cyan.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      project.projectType.toUpperCase(),
-                      style: TextStyle(fontSize: 10, color: AppColors.cyan, fontWeight: FontWeight.bold),
-                    ),
+                  Row(
+                    children: [
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: AppColors.cyan.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          project.projectType.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.cyan,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Text(
+                        '#${project.orderIndex + 1}',
+                        style: TextStyle(
+                          color: Colors.white38,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 8),
                   Text(
                     project.title,
-                    style: AppTextStyles.headline3.copyWith(fontSize: 16),
+                    style: AppTextStyles.headline3.copyWith(fontSize: 18),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    project.description,
+                    style: AppTextStyles.body2,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 8),
-                  Expanded(
-                    child: Text(
-                      project.description,
-                      style: AppTextStyles.body2.copyWith(fontSize: 12),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: project.technologies.take(4).map((tech) =>
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: AppColors.purple.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Text(
+                            tech,
+                            style: TextStyle(fontSize: 10, color: Colors.white70),
+                          ),
+                        ),
+                    ).toList(),
                   ),
                 ],
               ),
             ),
           ),
-          Divider(color: AppColors.glassBorder, height: 1),
-          Row(
-            children: [
-              Expanded(
-                child: InkWell(
-                  onTap: () => _showProjectDialog(project: project),
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.edit, size: 16, color: AppColors.cyan),
-                        SizedBox(width: 4),
-                        Text('Edit', style: TextStyle(color: AppColors.cyan)),
-                      ],
-                    ),
-                  ),
+          Padding(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () => _showProjectDialog(project: project),
+                  icon: Icon(Icons.edit, color: AppColors.cyan),
+                  tooltip: 'Edit',
                 ),
-              ),
-              Container(width: 1, height: 40, color: AppColors.glassBorder),
-              Expanded(
-                child: InkWell(
-                  onTap: () => _deleteProject(project.id),
-                  child: Container(
-                    padding: EdgeInsets.all(12),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.delete, size: 16, color: Colors.red),
-                        SizedBox(width: 4),
-                        Text('Delete', style: TextStyle(color: Colors.red)),
-                      ],
-                    ),
-                  ),
+                SizedBox(height: 8),
+                IconButton(
+                  onPressed: () => _deleteProject(project.id),
+                  icon: Icon(Icons.delete, color: Colors.red),
+                  tooltip: 'Delete',
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
