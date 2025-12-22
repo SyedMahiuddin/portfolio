@@ -251,14 +251,22 @@ class ProjectsTab extends GetView<AdminController> {
                     children: [
                       Text('Project Type', style: AppTextStyles.body1.copyWith(fontWeight: FontWeight.w600)),
                       SizedBox(height: 12),
-                      Obx(() => Row(
+                      Obx(() => Column(
                         children: [
-                          Expanded(
-                            child: _buildTypeSelector('Mobile', 'mobile'),
+                          Row(
+                            children: [
+                              Expanded(child: _buildTypeSelector('Mobile', 'mobile', Icons.smartphone)),
+                              SizedBox(width: 12),
+                              Expanded(child: _buildTypeSelector('Web', 'web', Icons.language)),
+                            ],
                           ),
-                          SizedBox(width: 16),
-                          Expanded(
-                            child: _buildTypeSelector('Web', 'web'),
+                          SizedBox(height: 12),
+                          Row(
+                            children: [
+                              Expanded(child: _buildTypeSelector('Desktop', 'desktop', Icons.desktop_windows)),
+                              SizedBox(width: 12),
+                              Expanded(child: _buildTypeSelector('macOS', 'macos', Icons.laptop_mac)),
+                            ],
                           ),
                         ],
                       )),
@@ -531,7 +539,7 @@ class ProjectsTab extends GetView<AdminController> {
     );
   }
 
-  Widget _buildTypeSelector(String label, String value) {
+  Widget _buildTypeSelector(String label, String value, IconData icon) {
     final isSelected = controller.selectedProjectType.value == value;
 
     return InkWell(
@@ -550,7 +558,7 @@ class ProjectsTab extends GetView<AdminController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              value == 'mobile' ? Icons.smartphone : Icons.web,
+              icon,
               color: isSelected ? AppColors.purple : Colors.white60,
             ),
             SizedBox(width: 8),
