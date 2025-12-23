@@ -26,6 +26,7 @@ All screenshots are stored in the `screenshots` directory:
 screenshots/
   home.png
   projects.png
+  skills.png
   admin.png
   mobile.png
 ````
@@ -33,14 +34,16 @@ screenshots/
 Embedded in this README:
 
 <p align="center">
-  <img src="screenshots/home.png" alt="Home Screen" width="45%"/>
-  <img src="screenshots/projects.png" alt="Projects Screen" width="45%"/>
+  <img src="screenshots/home.png" alt="Home Screen" width="30%"/>
+  <img src="screenshots/projects.png" alt="Projects Screen" width="30%"/>
+  <img src="screenshots/skills.png" alt="Skills Screen" width="30%"/>
 </p>
 
 <p align="center">
   <img src="screenshots/admin.png" alt="Admin Panel" width="45%"/>
-  <img src="screenshots/mobile.png" alt="Mobile View" width="45%"/>
+  <img src="screenshots/mobile.png" alt="Mobile View" width="25%"/>
 </p>
+
 
 ---
 
