@@ -7,7 +7,6 @@ import 'core/routes/app_pages.dart';
 import 'core/routes/app_routes.dart';
 import 'core/constants/app_colors.dart';
 import 'core/services/keyboard_service.dart';
-import 'core/helpers/initial_data_setup.dart';
 
 import 'core/services/theme_service.dart';
 

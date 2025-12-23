@@ -1,14 +1,4 @@
-Perfect 👍
-Below is the **FINAL, CLEAN, COMPLETE `README.md`**
-✔ **No GIF section**
-✔ **Screenshots only**
-✔ **Firebase via `firebase_options.dart`**
-✔ **Admin portal, Ctrl+A shortcut, responsive UI**
-✔ **Ready to copy → paste → push once**
 
----
-
-````markdown
 # 🌐 Flutter Web Portfolio – Admin Managed Personal Website
 
 A **modern, fully responsive personal portfolio web application** built using **Flutter Web**.  
