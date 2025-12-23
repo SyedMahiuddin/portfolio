@@ -33,25 +33,25 @@ class ProjectsSection extends GetView<HomeController> {
   Widget _buildSectionHeader() {
     return Column(
       children: [
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColors.purple, AppColors.cyan],
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Text(
-            'PORTFOLIO',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              letterSpacing: 2,
-            ),
-          ),
-        ),
-        SizedBox(height: 16),
+        // Container(
+        //   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        //   decoration: BoxDecoration(
+        //     gradient: LinearGradient(
+        //       colors: [AppColors.purple, AppColors.cyan],
+        //     ),
+        //     borderRadius: BorderRadius.circular(20),
+        //   ),
+        //   child: Text(
+        //     'PORTFOLIO',
+        //     style: TextStyle(
+        //       fontSize: 12,
+        //       fontWeight: FontWeight.bold,
+        //       color: Colors.white,
+        //       letterSpacing: 2,
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 16),
         Text(
           'Featured Projects',
           style: AppTextStyles.headline2,

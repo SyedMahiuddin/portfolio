@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:portfolio_web/presentation/pages/admin/widgets/education_tab.dart';
 import 'package:portfolio_web/presentation/pages/admin/widgets/message_tab.dart';
+import 'package:portfolio_web/presentation/pages/admin/widgets/settings_tab.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../controllers/admin_controller.dart';
@@ -196,6 +197,8 @@ class AdminPage extends GetView<AdminController> {
                   return MessagesTab();
                 case 4:
                   return EducationTab();
+                case 5:
+                  return SettingsTab();
                 default:
                   return ProfileTab();
               }

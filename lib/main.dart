@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'core/helpers/data_migration.dart';
 import 'firebase_options.dart';
 import 'core/routes/app_pages.dart';
 import 'core/routes/app_routes.dart';
 import 'core/constants/app_colors.dart';
 import 'core/services/keyboard_service.dart';
 import 'core/helpers/initial_data_setup.dart';
+
+import 'core/services/theme_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,8 +18,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // await InitialDataSetup.setupInitialData();
+  await DataMigration.migrateExistingData();
+  await DataMigration.addMissingFieldsToProjects();
 
+  Get.put(ThemeService());
   Get.put(KeyboardService());
 
   runApp(MyApp());

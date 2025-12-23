@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../core/services/theme_service.dart';
 import '../../data/models/message_model.dart';
 import '../../data/models/profile_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/experience_model.dart';
 import '../../data/models/education_model.dart';
+import '../../data/models/theme_model.dart';
 import '../../data/repositories/portfolio_repository.dart';
 
 class AdminController extends GetxController {
@@ -77,6 +79,16 @@ class AdminController extends GetxController {
   final RxList<MessageModel> messages = <MessageModel>[].obs;
   final RxInt unreadCount = 0.obs;
 
+
+  final themeService = Get.find<ThemeService>();
+  final RxString selectedThemeStyle = 'glassmorphism'.obs;
+
+  final Rx<Color> primaryColor = Color(0xFFB24BF3).obs;
+  final Rx<Color> secondaryColor = Color(0xFF00E5FF).obs;
+  final Rx<Color> accentColor = Color(0xFFFF006B).obs;
+  final Rx<Color> backgroundColor = Color(0xFF0A0E27).obs;
+  final Rx<Color> surfaceColor = Color(0xFF1a1f3a).obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -93,6 +105,118 @@ class AdminController extends GetxController {
       loadMessages(),
     ]);
     isLoading.value = false;
+  }
+
+  void loadCurrentTheme() {
+    if (themeService.currentTheme.value != null) {
+      final theme = themeService.currentTheme.value!;
+      selectedThemeStyle.value = theme.style.toString().split('.').last;
+      final colors = theme.colors;
+      primaryColor.value = colors['primary'] ?? Color(0xFFB24BF3);
+      secondaryColor.value = colors['secondary'] ?? Color(0xFF00E5FF);
+      accentColor.value = colors['accent'] ?? Color(0xFFFF006B);
+      backgroundColor.value = colors['background'] ?? Color(0xFF0A0E27);
+      surfaceColor.value = colors['surface'] ?? Color(0xFF1a1f3a);
+    }
+  }
+
+  Future<void> saveThemeSettings() async {
+    try {
+      isLoading.value = true;
+
+      final themeStyle = ThemeStyle.values.firstWhere(
+            (e) => e.toString().split('.').last == selectedThemeStyle.value,
+      );
+
+      final theme = ThemeModel(
+        id: 'main',
+        name: selectedThemeStyle.value.capitalize ?? '',
+        description: 'Custom theme configuration',
+        style: themeStyle,
+        colors: {
+          'primary': primaryColor.value,
+          'secondary': secondaryColor.value,
+          'accent': accentColor.value,
+          'background': backgroundColor.value,
+          'surface': surfaceColor.value,
+          'text': Color(0xFFFFFFFF),
+        },
+      );
+
+      await themeService.saveTheme(theme);
+
+      Get.snackbar(
+        'Success',
+        'Theme saved successfully. Refresh to see changes.',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to save theme: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void applyPresetTheme(String presetName) {
+    switch (presetName) {
+      case 'purple_dream':
+        primaryColor.value = Color(0xFFB24BF3);
+        secondaryColor.value = Color(0xFF00E5FF);
+        accentColor.value = Color(0xFFFF006B);
+        backgroundColor.value = Color(0xFF0A0E27);
+        surfaceColor.value = Color(0xFF1a1f3a);
+        break;
+      case 'ocean_breeze':
+        primaryColor.value = Color(0xFF0EA5E9);
+        secondaryColor.value = Color(0xFF06B6D4);
+        accentColor.value = Color(0xFF3B82F6);
+        backgroundColor.value = Color(0xFF0F172A);
+        surfaceColor.value = Color(0xFF1E293B);
+        break;
+      case 'sunset_glow':
+        primaryColor.value = Color(0xFFF97316);
+        secondaryColor.value = Color(0xFFFBBF24);
+        accentColor.value = Color(0xFFEF4444);
+        backgroundColor.value = Color(0xFF1C1917);
+        surfaceColor.value = Color(0xFF292524);
+        break;
+      case 'forest_mint':
+        primaryColor.value = Color(0xFF10B981);
+        secondaryColor.value = Color(0xFF34D399);
+        accentColor.value = Color(0xFF059669);
+        backgroundColor.value = Color(0xFF064E3B);
+        surfaceColor.value = Color(0xFF065F46);
+        break;
+      case 'cyberpunk':
+        primaryColor.value = Color(0xFFFF00FF);
+        secondaryColor.value = Color(0xFF00FFFF);
+        accentColor.value = Color(0xFFFFFF00);
+        backgroundColor.value = Color(0xFF000000);
+        surfaceColor.value = Color(0xFF1a1a1a);
+        break;
+      case 'elegant_dark':
+        primaryColor.value = Color(0xFF8B5CF6);
+        secondaryColor.value = Color(0xFFA78BFA);
+        accentColor.value = Color(0xFFC4B5FD);
+        backgroundColor.value = Color(0xFF18181B);
+        surfaceColor.value = Color(0xFF27272A);
+        break;
+    }
+  }
+
+  void resetToDefault() {
+    primaryColor.value = Color(0xFFB24BF3);
+    secondaryColor.value = Color(0xFF00E5FF);
+    accentColor.value = Color(0xFFFF006B);
+    backgroundColor.value = Color(0xFF0A0E27);
+    surfaceColor.value = Color(0xFF1a1f3a);
+    selectedThemeStyle.value = 'glassmorphism';
   }
 
   Future<void> loadProfile() async {
