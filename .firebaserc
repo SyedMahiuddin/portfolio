@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "jadurhotel"
-  }
+    "prod": "syed-mahiuddin",
+    "default": "syed-mahiuddin"
+  },
+  "targets": {},
+  "etags": {}
 }

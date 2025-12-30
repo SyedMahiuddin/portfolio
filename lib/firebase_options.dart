@@ -4,16 +4,6 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -30,8 +20,7 @@ class DefaultFirebaseOptions {
         return windows;
       case TargetPlatform.linux:
         throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+          'DefaultFirebaseOptions have not been configured for linux.',
         );
       default:
         throw UnsupportedError(
@@ -40,49 +29,54 @@ class DefaultFirebaseOptions {
     }
   }
 
+  /// 🌐 Web
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCflOIn2TQgc_QFzOiB_9fng7y5V2bjrko',
-    appId: '1:603308289777:web:ab858d69f621b210fac350',
-    messagingSenderId: '603308289777',
-    projectId: 'jadurhotel',
-    authDomain: 'jadurhotel.firebaseapp.com',
-    storageBucket: 'jadurhotel.appspot.com',
-    measurementId: 'G-BZEYL6BDZQ',
+    apiKey: 'AIzaSyCELiGd8se4JUb3wHnv-5dv1-YAYXVwnD4',
+    appId: '1:325820112512:web:e57a8963962ff516ded065',
+    messagingSenderId: '325820112512',
+    projectId: 'syed-mahiuddin',
+    authDomain: 'syed-mahiuddin.firebaseapp.com',
+    storageBucket: 'syed-mahiuddin.firebasestorage.app',
+    measurementId: 'G-YTKQC9KQMW',
   );
 
+  /// 🤖 Android
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB_zB0pBYXw_GYd6G3gWyzwL07TQ0t5B5o',
-    appId: '1:603308289777:android:472a3801100da0b9fac350',
-    messagingSenderId: '603308289777',
-    projectId: 'jadurhotel',
-    storageBucket: 'jadurhotel.appspot.com',
+    apiKey: 'AIzaSyCELiGd8se4JUb3wHnv-5dv1-YAYXVwnD4',
+    appId: '1:325820112512:android:YOUR_ANDROID_APP_ID',
+    messagingSenderId: '325820112512',
+    projectId: 'syed-mahiuddin',
+    storageBucket: 'syed-mahiuddin.firebasestorage.app',
   );
 
+  /// 🍎 iOS
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAo1BdBDYE2gEw-mZX-HUSEICgaQiyE7L8',
-    appId: '1:603308289777:ios:7438b36c5ae3a55ffac350',
-    messagingSenderId: '603308289777',
-    projectId: 'jadurhotel',
-    storageBucket: 'jadurhotel.appspot.com',
-    iosBundleId: 'com.example.portfolio',
+    apiKey: 'AIzaSyCELiGd8se4JUb3wHnv-5dv1-YAYXVwnD4',
+    appId: '1:325820112512:ios:YOUR_IOS_APP_ID',
+    messagingSenderId: '325820112512',
+    projectId: 'syed-mahiuddin',
+    storageBucket: 'syed-mahiuddin.firebasestorage.app',
+    iosBundleId: 'com.example.yourbundleid',
   );
 
+  /// 🍎 macOS
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAo1BdBDYE2gEw-mZX-HUSEICgaQiyE7L8',
-    appId: '1:603308289777:ios:7438b36c5ae3a55ffac350',
-    messagingSenderId: '603308289777',
-    projectId: 'jadurhotel',
-    storageBucket: 'jadurhotel.appspot.com',
-    iosBundleId: 'com.example.portfolio',
+    apiKey: 'AIzaSyCELiGd8se4JUb3wHnv-5dv1-YAYXVwnD4',
+    appId: '1:325820112512:ios:YOUR_MACOS_APP_ID',
+    messagingSenderId: '325820112512',
+    projectId: 'syed-mahiuddin',
+    storageBucket: 'syed-mahiuddin.firebasestorage.app',
+    iosBundleId: 'com.example.yourbundleid',
   );
 
+  /// 🪟 Windows
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCflOIn2TQgc_QFzOiB_9fng7y5V2bjrko',
-    appId: '1:603308289777:web:61990df7075ee421fac350',
-    messagingSenderId: '603308289777',
-    projectId: 'jadurhotel',
-    authDomain: 'jadurhotel.firebaseapp.com',
-    storageBucket: 'jadurhotel.appspot.com',
-    measurementId: 'G-50B4RYRP85',
+    apiKey: 'AIzaSyCELiGd8se4JUb3wHnv-5dv1-YAYXVwnD4',
+    appId: '1:325820112512:web:e57a8963962ff516ded065',
+    messagingSenderId: '325820112512',
+    projectId: 'syed-mahiuddin',
+    authDomain: 'syed-mahiuddin.firebaseapp.com',
+    storageBucket: 'syed-mahiuddin.firebasestorage.app',
+    measurementId: 'G-YTKQC9KQMW',
   );
 }

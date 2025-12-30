@@ -1,0 +1,504 @@
+{
+  "profile": {
+    "name": "Syed Mahiuddin",
+    "role": "Mobile App Developer (Flutter)",
+    "bio": "Mobile App Developer (Flutter) with nearly 3 years of professional experience in building scalable  Android, iOS, and Web applications. Strong expertise in tracking systems, background location ser- vices, ride-sharing platforms, attendance systems, exam applications, and booking solutions.  Experienced in working with Google Maps and Mapbox, integrating real-time location features, and delivering production-ready applications.",
+    "imageUrl": "https://i.ibb.co.com/wZ5BRWq0/mahiuddin.jpg",
+    "location": "Dhaka, Bangladesh",
+    "yearsExperience": 3,
+    "projectsCompleted": 15,
+    "cvUrl": "https://drive.google.com/file/d/1UsvToWtU5z__EjdE3athuV-oZ06zjMzH/view?usp=sharing",
+    "hireMeUrl": "https://wa.me/qr/6FU6GZO2UX6KC1",
+    "email": "syedmahiuddin01@gmail.com",
+    "linkedin": "https://www.linkedin.com/in/syed-mahiuddin",
+    "github": "https://github.com/SyedMahiuddin",
+    "phone": "+8801783080181",
+    "technicalSkills": {
+      "WEB": [
+        "Flutter Web",
+        "Responsive UI (Desktop / Tablet / Mobile)",
+        "Admin Dashboards & Portals",
+        "File Upload & Download Handling",
+        "Charts & Analytics",
+        "Firebase Auth & Firestore",
+        "Web Deployment (Firebase Hosting)"
+      ],
+      "IOS": [
+        "Platform Channels (MethodChannel / EventChannel)",
+        "Real-Time & Background Location Tracking",
+        "Camera, Storage & Sensor Access",
+        "Firebase Services",
+        "REST API Integration",
+        "App Performance & Memory Optimization",
+        "Native iOS (Swift – integration & plugins)",
+        "Performance Optimization"
+      ],
+      "Android ": [
+        "Flutter (Android)",
+        "Native Android (Java, Kotlin)",
+        "Background & Real-Time Location",
+        "App Performance & Bug Fixing",
+        "Firebase Services",
+        "Firebase ServicesPlatform Channels (MethodChannel / EventChannel)",
+        "ML Kit & TFLite (.tflite) Integration",
+        "Camera, Storage & Sensor Access"
+      ]
+    }
+  },
+  "projects": [
+    {
+      "id": "swhhXgMteAX2SwGqtKDz",
+      "title": "McqXpert — MCQ Exam Preparation App",
+      "description": "Admission test preparation app with paid packages, mock exams, flashcards, and result analytics.",
+      "details": "McqXpert is an exam preparation platform designed to help students prepare for admission and competitive exams. The app offers structured question banks, timed mock exams, flashcards for quick revision, and detailed performance analytics. Paid packages unlock premium content, providing students with a complete and focused learning experience.",
+      "features": [
+        "Subject-wise and topic,subtopic-wise MCQ practice",
+        "Timed mock exams with real exam experience",
+        "Flashcards for quick revision",
+        "Detailed result analysis and performance tracking",
+        "Bookmark questions ",
+        "Paid packages and subscription-based access",
+        "Secure authentication and user profile management"
+      ],
+      "images": [
+        "https://i.ibb.co.com/wtTs0WL/1766176929952-019b3858-c063-76f0-b776-cddda2401e4c.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "REST API"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.mcqxpert.app&pcampaignid=web_share",
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-12-20T03:36:09.782",
+      "orderIndex": 0
+    },
+    {
+      "id": "ocIhrAEWtTKBa9xO1szZ",
+      "title": "Lyfe — Employee Tracking Application",
+      "description": "Always-on background tracking app for monitoring employee movement with optimized battery usage.",
+      "details": "Lyfe is designed for organizations to monitor employee movement in real time while ensuring minimal battery consumption. The app uses native background services to continuously track location and securely sync data with the server for attendance validation, route monitoring, and workforce insights.",
+      "features": [
+        "Continuous background location tracking",
+        "Device Binding",
+        "Native background services (Android & iOS)",
+        "Real-time employee movement monitoring",
+        "Optimized battery and resource usage",
+        "Route history and activity logs",
+        "Secure authentication and role-based access"
+      ],
+      "images": [
+        "https://i.ibb.co.com/sJk6wC4F/gemini-3-pro-image-preview-2k-nano-banana-pro-a-combining-these-scre.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "Native Android (Kotlin) Background Services",
+        "Native iOS Background Modes (Location Services)",
+        "One Signal",
+        "Background Location Services",
+        "Mapbox",
+        "Rest API"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.lyfebd&pcampaignid=web_share",
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-12-20T03:31:35.857",
+      "orderIndex": 1
+    },
+    {
+      "id": "LuVs301cPoYdRZvMZ2qQ",
+      "title": "GeoAttend — Location Based Attendance System",
+      "description": "Geo-fencing based attendance system with real-time validation and reporting.",
+      "details": "GeoAttend uses geo-fencing and native background location capabilities to ensure employees can mark attendance only from authorized locations. Real-time validation and automated reporting provide accurate and reliable attendance management.",
+      "features": [
+        "Geo-fence based attendance marking",
+        "Real-time location validation",
+        "Automated attendance reports",
+        "Attendance history and logs",
+        "Secure authentication"
+      ],
+      "images": [
+        "https://i.ibb.co.com/5hsvmcbD/1766176768162-019b3856-5020-736a-a6d7-6cbc6d7356c0.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "Mapbox",
+        "Google Places",
+        "REST API"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.mycompany.geoattend&pcampaignid=web_share",
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-12-20T03:27:47.086",
+      "orderIndex": 2
+    },
+    {
+      "id": "aZjuSAJegmFgOe6OuEab",
+      "title": "Relaks Media",
+      "description": "Live Radio & Audio Streaming Platform",
+      "details": "A streaming app that allows users to listen to live radio and browse audio content by categories. Users can comment and chat in real time. An admin panel is included for uploading audio content, managing users, posting job listings, and selling tickets.",
+      "features": [],
+      "images": [
+        "https://i.ibb.co.com/7Nng4xhQ/image.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "Rest Api",
+        "WebSocket"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.relaks.relaks_media&pcampaignid=web_share",
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-12-18T13:37:26.323",
+      "orderIndex": 3
+    },
+    {
+      "id": "BbjiJiKexXlBb2hv63uU",
+      "title": "SalesForce — Field Employee Management System",
+      "description": "Task, visit, attendance, and tracking solution using calendar-style scheduling.",
+      "details": "SalesForce is a complete field employee management solution that helps organizations plan tasks, track visits, and monitor attendance. With calendar-based scheduling and real-time tracking, managers can efficiently oversee field operations and employee performance.",
+      "features": [
+        "Task and visit scheduling (calendar-based)",
+        "Field employee attendance tracking",
+        "Real-time location monitoring",
+        "Visit history and reporting",
+        "Role-based access and secure login",
+        "Device Binding"
+      ],
+      "images": [
+        "https://i.ibb.co.com/xvRjg0Z/1766176072694-019b384b-acb9-7838-b520-841cd7f10082.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "REST API",
+        "One Signal",
+        "Mapbox",
+        "Native Android (Kotlin) Background Services",
+        "Native iOS Background Location Modes"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": "https://drive.google.com/file/d/12HWKb0DsZYrW9q1GxWK8m_bbkaGjmao3/view?usp=drive_link",
+      "createdAt": "2025-12-20T03:21:58.889",
+      "orderIndex": 4
+    },
+    {
+      "id": "zTyWFlOM8Rlxlrhyvw6A",
+      "title": "Colango — Ride Sharing Platform (Driver & User Apps)",
+      "description": "A multi-service ride-sharing and courier platform with real-time tracking and driver bidding, similar to InDrive.",
+      "details": "Colango is a complete ride-sharing solution supporting bike, car, CNG, city, intercity, and courier services. The platform connects users and drivers through real-time location tracking, dynamic fare calculation, and a driver bidding system, ensuring flexible pricing and efficient rides. Separate apps are built for drivers and users with smooth performance and scalable architecture.",
+      "features": [
+        "Bike, car, CNG, city & intercity rides",
+        "Courier service support",
+        "Real-time GPS tracking",
+        "Driver bidding system",
+        "Fare estimation and calculation",
+        "Location-based ride matching"
+      ],
+      "images": [
+        "https://i.ibb.co.com/BHsqNXT0/image.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "Firebase",
+        "Google Map",
+        "GPS & Location Services",
+        "Direction & Polylines"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=com.callandgo.apps&hl=en-US&ah=pSRGwzAkCqhoRLJtOiXLM2gelf4",
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-12-18T14:06:21.945",
+      "orderIndex": 5
+    },
+    {
+      "id": "5Jz7z4vfeN65sXYScK6h",
+      "title": "SeedAI — AI Seed Classifier",
+      "description": "A smart mobile application that uses Artificial Intelligence to identify different types of seeds instantly from photos using on-device machine learning.",
+      "details": "SeedAI is a modern Flutter application designed for gardeners, farmers, and botany enthusiasts to easily identify seeds. By leveraging on-device TensorFlow Lite models, it allows users to snap a picture or upload an image to receive instant classification results without needing an internet connection. Beyond identification, the app offers a robust system to track scanning history, manage favorites, view detailed botanical information, and analyze collection statistics through a sleek, user-friendly interface.",
+      "features": [
+        "AI Identification: Instant seed classification via Camera or Gallery using TensorFlow Lite.",
+        "Offline Capability: Fully functional on-device inference requiring no internet connection.",
+        "Smart History: Local storage of scans with capabilities to search, filter (Favorites, Recent, High Confidence), and delete.",
+        "Detailed Insights: Displays scientific names, families, growth times, and best seasons for planting.",
+        "Statistics Dashboard: Visual breakdown of scanned seed types and confidence metrics.",
+        "Modern UI/UX: Polished interface with Dark/Light theme toggle and smooth animations."
+      ],
+      "images": [
+        "https://i.ibb.co.com/6cT58zgy/gemini-3-pro-image-preview-nano-banana-pro-a-combining-these-scre-1.png"
+      ],
+      "technologies": [
+        "Flutter & Dart",
+        "GetX (State Management & Routing)",
+        "TensorFlow Lite (Machine Learning)",
+        "GetStorage (Local Persistence)",
+        "Image Picker & Path Provider"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": "https://github.com/SyedMahiuddin/seedml",
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": "https://drive.google.com/file/d/1rUc-G5Fhk96oedJLIONRSUjwM-95JVxx/view?usp=sharing",
+      "createdAt": "2025-12-22T16:38:58.590",
+      "orderIndex": 6
+    },
+    {
+      "id": "ekjkjm8P0vDPlhSFQeBr",
+      "title": "Oplus Rider App",
+      "description": "A multi-service app for users to book rides, order food, and shop online.",
+      "details": "The Rider app allows users to seamlessly book rides, place food orders, and shop products online. With real-time tracking, fare estimation, and smooth UI, it ensures a reliable and convenient experience.",
+      "features": [
+        "Bike, car, and CNG ride booking",
+        "Food ordering from nearby restaurants",
+        "Online shopping and checkout",
+        "Real-time GPS tracking and fare calculation",
+        "Secure login and profile management"
+      ],
+      "images": [
+        "https://i.ibb.co.com/LDhjp68M/image.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "Google Maps",
+        "REST API"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": "https://drive.google.com/file/d/1-m_GU-1rMVyeM3V7E73kxcDjI2dVFcus/view?usp=sharing",
+      "createdAt": "2025-12-18T15:58:00.614",
+      "orderIndex": 7
+    },
+    {
+      "id": "DWitgIHB0uvIzda32amT",
+      "title": "Oplus Driver App",
+      "description": "Driver-focused app for managing ride requests, deliveries, and earnings.",
+      "details": "The Driver app empowers drivers to accept and manage ride and delivery requests efficiently. It provides real-time location tracking, optimized routes, and earnings management for a smooth work experience.",
+      "features": [
+        "Accept and manage ride requests",
+        "Accept and manage deliveries ",
+        "Track deliveries and routes in real time",
+        "View earnings and ride history",
+        "Update availability status"
+      ],
+      "images": [
+        "https://i.ibb.co.com/b5Xh4hwz/image.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "Google Maps",
+        "REST API"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": "https://drive.google.com/file/d/1XwkLaE8Iet9VkFIhW6Ntso3cHr0za_gc/view?usp=sharing",
+      "createdAt": "2025-12-18T16:17:33.011",
+      "orderIndex": 8
+    },
+    {
+      "id": "NWjLMlkZewAcnvfDgV6f",
+      "title": "Oplus Restaurant App",
+      "description": "Restaurant app for managing orders, menus, and delivery assignments.",
+      "details": "The Restaurant app allows restaurants to efficiently manage incoming orders, update menus, and assign deliveries. Real-time notifications and order tracking ensure timely processing and customer satisfaction.",
+      "features": [
+        "Receive and manage shop orders",
+        "Update menus and prices",
+        "Track order status",
+        "Dashboard and Analysis"
+      ],
+      "images": [
+        "https://i.ibb.co.com/kLWFn5r/image.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "REST API"
+      ],
+      "projectType": "mobile",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": "https://drive.google.com/file/d/1hsoy5ecaeajJsFiRivdJsegwYygVuWwO/view?usp=sharing",
+      "createdAt": "2025-12-18T16:23:58.354",
+      "orderIndex": 9
+    },
+    {
+      "id": "FO3Ibv4Y4uE72AyIBbXF",
+      "title": "FitFlo — Gym Management App",
+      "description": "Mobile application for gym members to manage workouts, subscriptions, and fitness activities.",
+      "details": "FitFlo is a mobile app designed for gym members to access workouts, track progress, and manage memberships. The app provides an intuitive experience for viewing workout plans, monitoring fitness activity, and staying connected with the gym through subscriptions and attendance features",
+      "features": [
+        "Workout Program",
+        "Statistics ",
+        "Track daily activities",
+        "Join gym",
+        "Explore exercise",
+        "AI-Driven Personalization",
+        "Video Tutorials"
+      ],
+      "images": [
+        "https://i.ibb.co.com/k23dFm1R/1766035279389-019b2fe7-77ae-7fb2-a253-1d4ec32a2198.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "REST API",
+        "Firebase",
+        "Get Stream",
+        "DeepLink"
+      ],
+      "projectType": "mobile",
+      "liveUrl": "https://firebasestorage.googleapis.com/v0/b/jadurhotel.appspot.com/o/545206916_1623544621939702_3102644482176654368_n.jpg?alt=media&token=5ceba309-33ad-4880-9f71-a31660e4f9e1",
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-11-17T13:21:08.685",
+      "orderIndex": 10
+    },
+    {
+      "id": "DR4ydsNAQBzafc9CcExb",
+      "title": "Operator Portal (Web App)",
+      "description": "A web-based portal that allows gym operators to manage all gym activities from one place.",
+      "details": "Features include creating workouts and exercises, managing users and team members, handling user subscriptions, and viewing graphical analytics of gym activities and performance.\ngym. ",
+      "features": [
+        "Manage Members",
+        "Manage Team",
+        "Create Packages ",
+        "Add Equipment ",
+        "Manage Exercises "
+      ],
+      "images": [
+        "https://i.ibb.co.com/QvbcFpsK/image.png"
+      ],
+      "technologies": [
+        "Flutter",
+        "SQLite",
+        "Charts",
+        "Firebase"
+      ],
+      "projectType": "web",
+      "liveUrl": "https://fitflo-6cbc1.web.app/auth/signin",
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-10-18T13:21:08.685",
+      "orderIndex": 11
+    },
+    {
+      "id": "LC28xvd1ZoBrdFaBRrP3",
+      "title": "KhelbeAI — AI-Powered macOS Gaming Asset Generator",
+      "description": "An AI-powered macOS application for generating, storing, and managing game development assets including 3D models, music, and animations.",
+      "details": "KhelbeAI is a macOS desktop application built to streamline game development workflows using AI. The app enables creators to generate gaming assets such as 3D models from text or images, create music from text prompts, and produce animations through AI-assisted pipelines. Generated assets are stored locally using a macOS-optimized database with a structured file hierarchy, while native file picking and WebView integration ensure a smooth desktop experience.",
+      "features": [
+        "Text-to-3D and Image-to-3D asset generation",
+        "Text-to-music generation for game audio",
+        "Text-to-animation generation",
+        "Animation file picker and animation viewer",
+        "Local asset storage with structured file hierarchy",
+        "Local macOS database for asset metadata",
+        "Native macOS file picking inside WebView",
+        "Desktop-optimized UI and performance"
+      ],
+      "images": [
+        "https://i.ibb.co.com/pj4W8sJY/image.png"
+      ],
+      "technologies": [
+        "Flutter (macOS)",
+        "WebView integration",
+        "Native macOS file system access",
+        "Local macOS Database (SQLite / local persistence)",
+        "AI-powered asset generation APIs",
+        "REST API"
+      ],
+      "projectType": "macos",
+      "liveUrl": null,
+      "githubUrl": null,
+      "playStoreUrl": null,
+      "appStoreUrl": null,
+      "apkUrl": null,
+      "createdAt": "2025-12-22T14:03:38.617",
+      "orderIndex": 12
+    }
+  ],
+  "experiences": [
+    {
+      "id": "qCuRihNiQa3UBMndCZVq",
+      "company": "TechTrioz Solutions",
+      "position": "Mobile App Developer",
+      "description": "• Developed multiple tracking and location-based applications using Flutter.\n• Implemented real-time and background location tracking with geo-fencing.\n• Built location-based attendance and employee monitoring systems.\n• Worked on exam systems, gym management apps, and booking platforms.\n• Integrated REST APIs, Firebase services, Google Maps, and Mapbox.",
+      "startDate": "Feb 2025",
+      "endDate": null,
+      "isCurrently": true,
+      "orderIndex": 0
+    },
+    {
+      "id": "8bic2VUl1gxlvrgRzQnb",
+      "company": "FitFlo — Sydney, Australia (Remote)",
+      "position": "Full Stack Flutter Developer",
+      "description": "• Developed and maintained Flutter applications for Android, iOS, and Web.\n• Handled production bug fixes, performance optimization, and feature releases.\n• Worked on subscription systems, dashboards, and analytics modules.",
+      "startDate": "Sep 2023",
+      "endDate": "Jan 2025",
+      "isCurrently": false,
+      "orderIndex": 1
+    },
+    {
+      "id": "PMqPcdhZsnLOtkRehiLl",
+      "company": "Texon Ltd — Dhaka, Bangladesh",
+      "position": "Junior Mobile App Developer",
+      "description": "Developed a social platform with chat, feeds, and file management features.",
+      "startDate": "Mar 2023",
+      "endDate": "Aug 2023",
+      "isCurrently": false,
+      "orderIndex": 2
+    },
+    {
+      "id": "uPPjbO8cFJJCnaKuBDPf",
+      "company": "ARS Tech — Rajshahi, Bangladesh",
+      "position": "Flutter Developer Intern",
+      "description": "Gained hands-on experience in developing e-commerce applications and Google Maps integration with functional\nimplementations.",
+      "startDate": "Jan 2023",
+      "endDate": "Feb 2023",
+      "isCurrently": false,
+      "orderIndex": 3
+    }
+  ],
+  "educations": [
+    {
+      "id": "6JU2Z6V1hqnCojuf1p3R",
+      "institution": "Daffodil International University",
+      "degree": "Bachelor of Science",
+      "field": "Computer Science & Engineering",
+      "description": "",
+      "startDate": "Jan 2019",
+      "endDate": "Dec 2022",
+      "isCurrently": false,
+      "orderIndex": 0
+    }
+  ],
+  "exportedAt": "2025-12-31T03:53:28.999"
+}

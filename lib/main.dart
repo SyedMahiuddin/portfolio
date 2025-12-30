@@ -16,7 +16,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-   await InitialDataSetup.setupInitialData();
+  // await InitialDataSetup.setupFromBackupAsset();
   // await DataMigration.migrateExistingData();
   // await DataMigration.addMissingFieldsToProjects();
 

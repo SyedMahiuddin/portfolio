@@ -31,7 +31,7 @@
             "android": "1:603308289777:android:472a3801100da0b9fac350",
             "ios": "1:603308289777:ios:7438b36c5ae3a55ffac350",
             "macos": "1:603308289777:ios:7438b36c5ae3a55ffac350",
-            "web": "1:603308289777:web:ab858d69f621b210fac350",
+            "web": "1:325820112512:web:e57a8963962ff516ded065",
             "windows": "1:603308289777:web:61990df7075ee421fac350"
           }
         }
@@ -44,6 +44,12 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
     ]
   }
 }
