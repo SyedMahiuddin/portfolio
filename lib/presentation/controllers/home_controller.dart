@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../data/models/education_model.dart';
@@ -6,6 +9,7 @@ import '../../data/models/profile_model.dart';
 import '../../data/models/project_model.dart';
 import '../../data/models/experience_model.dart';
 import '../../data/repositories/portfolio_repository.dart';
+import 'dart:html' as html;
 
 class HomeController extends GetxController {
   final PortfolioRepository _repository = PortfolioRepository();
@@ -68,7 +72,41 @@ class HomeController extends GetxController {
       loadExperiences(),
       loadEducations(),
     ]);
+
+   // await exportAllDataToDownloadWeb();
     isLoading.value = false;
+  }
+
+  Future<void> exportAllDataToDownloadWeb() async {
+    // 1️⃣ Combine data
+    final Map<String, dynamic> data = {
+      "profile": profile.toJson(),
+      "projects": projects.map((e) => e.toJson()).toList(),
+      "experiences": experiences.map((e) => e.toJson()).toList(),
+      "educations": educations.map((e) => e.toJson()).toList(),
+      "exportedAt": DateTime.now().toIso8601String(),
+    };
+
+    // 2️⃣ Convert to text (JSON)
+    final String textData =
+    const JsonEncoder.withIndent('  ').convert(data);
+
+    // 3️⃣ Create downloadable file
+    final bytes = utf8.encode(textData);
+    final blob = html.Blob([bytes], 'text/plain');
+
+    final url = html.Url.createObjectUrlFromBlob(blob);
+
+    // 4️⃣ Trigger browser download
+    final anchor = html.AnchorElement(href: url)
+      ..setAttribute(
+        "download",
+        "backup_data_${DateTime.now().millisecondsSinceEpoch}.txt",
+      )
+      ..click();
+
+    // 5️⃣ Cleanup
+    html.Url.revokeObjectUrl(url);
   }
 
   Future<void> loadProfile() async {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'core/helpers/data_migration.dart';
+import 'package:portfolio_web/core/helpers/initial_data_setup.dart';
 import 'firebase_options.dart';
 import 'core/routes/app_pages.dart';
 import 'core/routes/app_routes.dart';
@@ -16,9 +16,9 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  await DataMigration.migrateExistingData();
-  await DataMigration.addMissingFieldsToProjects();
+   await InitialDataSetup.setupInitialData();
+  // await DataMigration.migrateExistingData();
+  // await DataMigration.addMissingFieldsToProjects();
 
   Get.put(ThemeService());
   Get.put(KeyboardService());
