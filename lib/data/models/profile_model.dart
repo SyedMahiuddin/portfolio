@@ -1,4 +1,7 @@
 class ProfileModel {
+  final String id;
+  final bool isMainProfile;
+
   final String name;
   final String role;
   final String bio;
@@ -15,6 +18,8 @@ class ProfileModel {
   final Map<String, List<String>> technicalSkills;
 
   ProfileModel({
+    required this.id,
+    required this.isMainProfile,
     required this.name,
     required this.role,
     required this.bio,
@@ -33,6 +38,7 @@ class ProfileModel {
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     Map<String, List<String>> skills = {};
+
     if (json['technicalSkills'] != null) {
       (json['technicalSkills'] as Map<String, dynamic>).forEach((key, value) {
         skills[key] = List<String>.from(value);
@@ -40,6 +46,8 @@ class ProfileModel {
     }
 
     return ProfileModel(
+      id: json['id'] ?? '',
+      isMainProfile: json['isMainProfile'] ?? false,
       name: json['name'] ?? '',
       role: json['role'] ?? '',
       bio: json['bio'] ?? '',
@@ -59,6 +67,8 @@ class ProfileModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'isMainProfile': isMainProfile,
       'name': name,
       'role': role,
       'bio': bio,

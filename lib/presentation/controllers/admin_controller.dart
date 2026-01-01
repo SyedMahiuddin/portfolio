@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 import '../../core/services/theme_service.dart';
 import '../../data/models/message_model.dart';
 import '../../data/models/profile_model.dart';
@@ -13,6 +14,10 @@ import '../../data/repositories/portfolio_repository.dart';
 class AdminController extends GetxController {
   final PortfolioRepository _repository = PortfolioRepository();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  // Team profiles management
+  final RxList<ProfileModel> teamProfiles = <ProfileModel>[].obs;
+  final Rx<ProfileModel?> selectedProfile = Rx<ProfileModel?>(null);
 
   final Rx<ProfileModel?> profile = Rx<ProfileModel?>(null);
   final RxList<ProjectModel> projects = <ProjectModel>[].obs;
@@ -35,6 +40,7 @@ class AdminController extends GetxController {
   final linkedinController = TextEditingController();
   final githubController = TextEditingController();
   final phoneController = TextEditingController();
+  final RxBool isMainProfile = false.obs;
 
   // Skills Controllers
   final RxMap<String, List<String>> technicalSkills = <String, List<String>>{}.obs;
@@ -79,7 +85,6 @@ class AdminController extends GetxController {
   final RxList<MessageModel> messages = <MessageModel>[].obs;
   final RxInt unreadCount = 0.obs;
 
-
   final themeService = Get.find<ThemeService>();
   final RxString selectedThemeStyle = 'glassmorphism'.obs;
 
@@ -98,13 +103,191 @@ class AdminController extends GetxController {
   Future<void> loadAllData() async {
     isLoading.value = true;
     await Future.wait([
-      loadProfile(),
+      loadAllProfiles(),
       loadProjects(),
       loadExperiences(),
       loadEducations(),
       loadMessages(),
     ]);
     isLoading.value = false;
+  }
+
+  // Team Profile Management Methods
+  Future<void> loadAllProfiles() async {
+    final data = await _repository.getAllProfiles();
+    teamProfiles.value = data;
+
+    // Set main profile if exists
+    final mainProfile = data.firstWhereOrNull((p) => p.id == 'main' || p.isMainProfile);
+    if (mainProfile != null) {
+      profile.value = mainProfile;
+      populateFormWithProfile(mainProfile);
+    }
+  }
+
+  void selectProfile(ProfileModel profileToEdit) {
+    selectedProfile.value = profileToEdit;
+    populateFormWithProfile(profileToEdit);
+  }
+
+  void populateFormWithProfile(ProfileModel p) {
+    nameController.text = p.name;
+    roleController.text = p.role;
+    bioController.text = p.bio;
+    locationController.text = p.location;
+    yearsExpController.text = p.yearsExperience.toString();
+    projectsCompletedController.text = p.projectsCompleted.toString();
+    cvUrlController.text = p.cvUrl;
+    imageUrlController.text = p.imageUrl;
+    hireMeUrlController.text = p.hireMeUrl;
+    emailController.text = p.email;
+    linkedinController.text = p.linkedin;
+    githubController.text = p.github;
+    phoneController.text = p.phone;
+    technicalSkills.value = Map<String, List<String>>.from(p.technicalSkills);
+    isMainProfile.value = p.isMainProfile;
+  }
+  final _uuid = const Uuid();
+  Future<void> addNewProfile() async {
+    try {
+      isLoading.value = true;
+
+      final String profileId = _uuid.v4(); // 🔥 unique random id
+
+      final newProfile = ProfileModel(
+        id: profileId,
+        isMainProfile: isMainProfile.value,
+        name: nameController.text,
+        role: roleController.text,
+        bio: bioController.text,
+        imageUrl: imageUrlController.text,
+        location: locationController.text,
+        yearsExperience: int.tryParse(yearsExpController.text) ?? 0,
+        projectsCompleted:
+        int.tryParse(projectsCompletedController.text) ?? 0,
+        cvUrl: cvUrlController.text,
+        hireMeUrl: hireMeUrlController.text,
+        email: emailController.text,
+        linkedin: linkedinController.text,
+        github: githubController.text,
+        phone: phoneController.text,
+        technicalSkills:
+        Map<String, List<String>>.from(technicalSkills),
+      );
+
+      await _repository.addProfile(newProfile);
+      await loadAllProfiles();
+      clearProfileForm();
+      Get.back();
+
+      Get.snackbar(
+        'Success',
+        'Team member added successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to add team member: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+
+  Future<void> updateSelectedProfile() async {
+    if (selectedProfile.value == null) return;
+
+    try {
+      isLoading.value = true;
+      final updatedProfile = ProfileModel(
+        id: selectedProfile.value!.id,
+        name: nameController.text,
+        role: roleController.text,
+        bio: bioController.text,
+        imageUrl: imageUrlController.text,
+        location: locationController.text,
+        yearsExperience: int.tryParse(yearsExpController.text) ?? 0,
+        projectsCompleted: int.tryParse(projectsCompletedController.text) ?? 0,
+        cvUrl: cvUrlController.text,
+        hireMeUrl: hireMeUrlController.text,
+        email: emailController.text,
+        linkedin: linkedinController.text,
+        github: githubController.text,
+        phone: phoneController.text,
+        technicalSkills: Map<String, List<String>>.from(technicalSkills),
+        isMainProfile: isMainProfile.value,
+      );
+
+      await _repository.updateProfile(updatedProfile);
+      await loadAllProfiles();
+      selectedProfile.value = null;
+      clearProfileForm();
+      Get.back();
+
+      Get.snackbar(
+        'Success',
+        'Profile updated successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to update profile: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> deleteProfile(String id) async {
+    try {
+      isLoading.value = true;
+      await _repository.deleteProfile(id);
+      await loadAllProfiles();
+
+      Get.snackbar(
+        'Success',
+        'Team member deleted successfully',
+        backgroundColor: Colors.green.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Failed to delete team member: $e',
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void clearProfileForm() {
+    nameController.clear();
+    roleController.clear();
+    bioController.clear();
+    locationController.clear();
+    yearsExpController.clear();
+    projectsCompletedController.clear();
+    cvUrlController.clear();
+    imageUrlController.clear();
+    hireMeUrlController.clear();
+    emailController.clear();
+    linkedinController.clear();
+    githubController.clear();
+    phoneController.clear();
+    technicalSkills.clear();
+    isMainProfile.value = false;
+    selectedProfile.value = null;
   }
 
   void loadCurrentTheme() {
@@ -223,20 +406,7 @@ class AdminController extends GetxController {
     final data = await _repository.getProfile();
     if (data != null) {
       profile.value = data;
-      nameController.text = data.name;
-      roleController.text = data.role;
-      bioController.text = data.bio;
-      locationController.text = data.location;
-      yearsExpController.text = data.yearsExperience.toString();
-      projectsCompletedController.text = data.projectsCompleted.toString();
-      cvUrlController.text = data.cvUrl;
-      imageUrlController.text = data.imageUrl;
-      hireMeUrlController.text = data.hireMeUrl;
-      emailController.text = data.email;
-      linkedinController.text = data.linkedin;
-      githubController.text = data.github;
-      phoneController.text = data.phone;
-      technicalSkills.value = data.technicalSkills;
+      populateFormWithProfile(data);
     }
   }
 
@@ -256,41 +426,48 @@ class AdminController extends GetxController {
   }
 
   Future<void> updateProfile() async {
-    try {
-      isLoading.value = true;
-      final updatedProfile = ProfileModel(
-        name: nameController.text,
-        role: roleController.text,
-        bio: bioController.text,
-        imageUrl: imageUrlController.text,
-        location: locationController.text,
-        yearsExperience: int.tryParse(yearsExpController.text) ?? 0,
-        projectsCompleted: int.tryParse(projectsCompletedController.text) ?? 0,
-        cvUrl: cvUrlController.text,
-        hireMeUrl: hireMeUrlController.text,
-        email: emailController.text,
-        linkedin: linkedinController.text,
-        github: githubController.text,
-        phone: phoneController.text,
-        technicalSkills: technicalSkills,
-      );
-      await _repository.updateProfile(updatedProfile);
-      profile.value = updatedProfile;
-      Get.snackbar(
-        'Success',
-        'Profile updated successfully',
-        backgroundColor: Colors.green.withOpacity(0.8),
-        colorText: Colors.white,
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to update profile: $e',
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
-    } finally {
-      isLoading.value = false;
+    if (selectedProfile.value != null) {
+      await updateSelectedProfile();
+    } else {
+      // Backwards compatibility: update main profile
+      try {
+        isLoading.value = true;
+        final updatedProfile = ProfileModel(
+          id: 'main',
+          name: nameController.text,
+          role: roleController.text,
+          bio: bioController.text,
+          imageUrl: imageUrlController.text,
+          location: locationController.text,
+          yearsExperience: int.tryParse(yearsExpController.text) ?? 0,
+          projectsCompleted: int.tryParse(projectsCompletedController.text) ?? 0,
+          cvUrl: cvUrlController.text,
+          hireMeUrl: hireMeUrlController.text,
+          email: emailController.text,
+          linkedin: linkedinController.text,
+          github: githubController.text,
+          phone: phoneController.text,
+          technicalSkills: technicalSkills,
+          isMainProfile: true,
+        );
+        await _repository.updateProfile(updatedProfile);
+        profile.value = updatedProfile;
+        Get.snackbar(
+          'Success',
+          'Profile updated successfully',
+          backgroundColor: Colors.green.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } catch (e) {
+        Get.snackbar(
+          'Error',
+          'Failed to update profile: $e',
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } finally {
+        isLoading.value = false;
+      }
     }
   }
 
@@ -506,7 +683,6 @@ class AdminController extends GetxController {
     }
   }
 
-
   Future<void> deleteExperience(String id) async {
     try {
       isLoading.value = true;
@@ -530,7 +706,6 @@ class AdminController extends GetxController {
     }
   }
 
-  // Education Methods
   Future<void> addEducation() async {
     try {
       isLoading.value = true;
@@ -626,7 +801,6 @@ class AdminController extends GetxController {
     }
   }
 
-  // Reordering Methods
   void reorderProjects(int oldIndex, int newIndex) {
     if (newIndex > oldIndex) {
       newIndex -= 1;
@@ -669,7 +843,6 @@ class AdminController extends GetxController {
     _repository.updateEducationOrder(educations);
   }
 
-  // Project Helper Methods
   void addProjectImageUrl() {
     if (projectImageUrlController.text.isNotEmpty) {
       projectImages.add(projectImageUrlController.text);
@@ -703,7 +876,6 @@ class AdminController extends GetxController {
     projectImages.removeAt(index);
   }
 
-  // Edit Methods
   void editProject(ProjectModel project) {
     projectTitleController.text = project.title;
     projectDescController.text = project.description;
@@ -738,7 +910,6 @@ class AdminController extends GetxController {
     eduIsCurrently.value = edu.isCurrently;
   }
 
-  // Form Clearing Methods
   void clearProjectForm() {
     projectTitleController.clear();
     projectDescController.clear();
@@ -782,7 +953,6 @@ class AdminController extends GetxController {
     selectedSkillCategory.value = '';
   }
 
-  // Messages Methods
   Future<void> loadMessages() async {
     final data = await _repository.getMessages();
     messages.value = data;
@@ -799,7 +969,6 @@ class AdminController extends GetxController {
     await loadMessages();
   }
 
-  // Logout
   Future<void> logout() async {
     await _auth.signOut();
     Get.offAllNamed('/');

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:portfolio_web/presentation/pages/admin/widgets/education_tab.dart';
 import 'package:portfolio_web/presentation/pages/admin/widgets/message_tab.dart';
 import 'package:portfolio_web/presentation/pages/admin/widgets/settings_tab.dart';
+import 'package:portfolio_web/presentation/pages/admin/widgets/team_member_tab.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_text_styles.dart';
 import '../../controllers/admin_controller.dart';
@@ -199,6 +200,8 @@ class AdminPage extends GetView<AdminController> {
                   return EducationTab();
                 case 5:
                   return SettingsTab();
+                case 6:
+                  return TeamManagementTab();
                 default:
                   return ProfileTab();
               }

@@ -8,11 +8,12 @@ import '../models/experience_model.dart';
 class PortfolioRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // Get main profile (backwards compatibility)
   Future<ProfileModel?> getProfile() async {
     try {
       final doc = await _firestore.collection('profile').doc('main').get();
       if (doc.exists) {
-        return ProfileModel.fromJson(doc.data()!);
+        return ProfileModel.fromJson({...doc.data()!, 'id': 'main'});
       }
       return null;
     } catch (e) {
@@ -20,9 +21,53 @@ class PortfolioRepository {
     }
   }
 
+  // Get all team members
+  Future<List<ProfileModel>> getAllProfiles() async {
+    try {
+      final snapshot = await _firestore.collection('profile').get();
+      return snapshot.docs
+          .map((doc) => ProfileModel.fromJson({...doc.data(), 'id': doc.id}))
+          .toList();
+    } catch (e) {
+      print('Error loading profiles: $e');
+      return [];
+    }
+  }
 
+  // Get single profile by ID
+  Future<ProfileModel?> getProfileById(String id) async {
+    try {
+      final doc = await _firestore.collection('profile').doc(id).get();
+      if (doc.exists) {
+        return ProfileModel.fromJson({...doc.data()!, 'id': doc.id});
+      }
+      return null;
+    } catch (e) {
+      print('Error loading profile: $e');
+      return null;
+    }
+  }
 
+  // Add new team member
+  Future<String?> addProfile(ProfileModel profile) async {
+    try {
+      final docRef = await _firestore.collection('profile').add(profile.toJson());
+      return docRef.id;
+    } catch (e) {
+      print('Error adding profile: $e');
+      return null;
+    }
+  }
 
+  // Update existing profile
+  Future<void> updateProfile(ProfileModel profile) async {
+    await _firestore.collection('profile').doc(profile.id).set(profile.toJson());
+  }
+
+  // Delete team member
+  Future<void> deleteProfile(String id) async {
+    await _firestore.collection('profile').doc(id).delete();
+  }
 
   Future<void> sendMessage(MessageModel message) async {
     await _firestore.collection('messages').add(message.toJson());
@@ -42,18 +87,12 @@ class PortfolioRepository {
     }
   }
 
-
-
   Future<void> markMessageAsRead(String id) async {
     await _firestore.collection('messages').doc(id).update({'isRead': true});
   }
 
   Future<void> deleteMessage(String id) async {
     await _firestore.collection('messages').doc(id).delete();
-  }
-
-  Future<void> updateProfile(ProfileModel profile) async {
-    await _firestore.collection('profile').doc('main').set(profile.toJson());
   }
 
   Future<void> addProject(ProjectModel project) async {
@@ -79,8 +118,6 @@ class PortfolioRepository {
   Future<void> deleteExperience(String id) async {
     await _firestore.collection('experiences').doc(id).delete();
   }
-
-
 
   Future<void> addEducation(EducationModel education) async {
     await _firestore.collection('education').add(education.toJson());

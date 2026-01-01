@@ -31,13 +31,13 @@ class DefaultFirebaseOptions {
 
   /// 🌐 Web
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCELiGd8se4JUb3wHnv-5dv1-YAYXVwnD4',
-    appId: '1:325820112512:web:e57a8963962ff516ded065',
-    messagingSenderId: '325820112512',
-    projectId: 'syed-mahiuddin',
-    authDomain: 'syed-mahiuddin.firebaseapp.com',
-    storageBucket: 'syed-mahiuddin.firebasestorage.app',
-    measurementId: 'G-YTKQC9KQMW',
+    apiKey: 'AIzaSyD-7G37c2ZZCtWAJIwsuBiPQOjJrkpH7B4',
+    authDomain: 'devtriplesteam.firebaseapp.com',
+    projectId: 'devtriplesteam',
+    storageBucket: 'devtriplesteam.firebasestorage.app',
+    messagingSenderId: '277195493362',
+    appId: '1:277195493362:web:46dc98305807caf942656b',
+    measurementId: 'G-BK4HZPJDPX',
   );
 
   /// 🤖 Android

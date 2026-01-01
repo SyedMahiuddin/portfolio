@@ -77,6 +77,12 @@ class AdminSidebar extends GetView<AdminController> {
                   index: 5,
                   isSelected: controller.selectedTab.value == 5,
                 ),
+                _buildMenuItem(
+                  icon: Icons.settings,
+                  title: 'Team',
+                  index: 6,
+                  isSelected: controller.selectedTab.value == 5,
+                ),
               ],
             )),
           ),
